@@ -60,8 +60,8 @@ export function authenticate({ commit }, payload) {
     .post('/authenticate', payload)
     .then(({ data: { success, data, token: { token } } }) => {
       if (success) {
-        commit(SAVE_USER, data);
         commit(SAVE_TOKEN, token);
+        commit(SAVE_USER, data);
       }
       return success;
     })

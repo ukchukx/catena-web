@@ -10,7 +10,7 @@
         </b-row>
         <b-row class="mt-4">
           <b-col sm="12" md="6" offset-md="3">
-            <b-form @submit.stop.prevent="authenticate()">
+            <b-form @submit.stop.prevent="login()">
               <b-form-group label="Email address:" label-for="loginEmail">
                 <b-form-input
                   id="loginEmail"
@@ -45,17 +45,18 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   name: 'Login',
   data() {
     return {
       loginForm: {
-        password: '',
-        email: ''
+        password: 'password',
+        email: 'test@email.com'
       },
-      signupPath: {
-        name: 'Signup'
-      }
+      signupPath: { name: 'Signup' },
+      profilePath: { name: 'Profile' }
     };
   },
   computed: {
@@ -65,9 +66,16 @@ export default {
     }
   },
   methods: {
-    authenticate() {
-      // TODO: Implement user authentication
-      ;
+    ...mapActions(['authenticate']),
+    login() {
+      this.authenticate(this.loginForm)
+        .then((success) => {
+          if (!success) {
+            alert('Could not login');
+            return;
+          }
+          this.$router.replace(this.profilePath);
+        });
     }
   }
 };
