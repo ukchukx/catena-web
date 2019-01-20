@@ -14,7 +14,8 @@ const router = new VueRouter({
       name: 'Login',
       component: Login,
       meta: {
-        requiresAuth: false
+        requiresAuth: false,
+        authRoute: true
       }
     },
     {
@@ -22,7 +23,8 @@ const router = new VueRouter({
       name: 'Signup',
       component: Signup,
       meta: {
-        requiresAuth: false
+        requiresAuth: false,
+        authRoute: true
       }
     },
     {
@@ -42,10 +44,17 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    const user = store.getters.user;
+    const token = store.getters.token;
 
-    if (!user.token) { // Not authenticated? Send user to login
+    if (!token.length) { // Not authenticated? Send user to login
       next({ name: 'Login', query: { to: to.fullPath } });
+    } else {
+      next();
+    }
+  } else if (to.matched.some(record => record.meta.authRoute)) {
+    const token = store.getters.token;
+    if (token.length) { // authenticated? Send user away from here
+      next({ name: 'Profile' });
     } else {
       next();
     }

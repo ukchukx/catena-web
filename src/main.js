@@ -12,7 +12,7 @@ import store from './store';
 Vue.config.productionTip = false;
 Vue.use(BootstrapVue);
 window.axios = axios;
-axios.defaults.baseURL = 'http://127.0.0.1:3333';
+axios.defaults.baseURL = 'http://127.0.0.1:3333/api/v1';
 axios.interceptors.request.use((config) => {
   config.headers.Authorization = `Bearer ${store.getters.token}`;
   return config;

@@ -23,7 +23,7 @@ const mutations = {
   },
   [SAVE_USER](state, profile) {
     const { tasks = [] } = profile;
-    [SAVE_TASKS](tasks);
+    state.tasks = tasks;
     delete profile.tasks;
     state.user = profile;
   },

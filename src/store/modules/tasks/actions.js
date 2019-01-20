@@ -11,7 +11,7 @@ import {
 } from './mutation-types';
 
 export function fetchProfile({ commit }) {
-  axios
+  return axios
     .get('/me')
     .then(({ data: { success, data, token } }) => {
       if (success) {
@@ -24,7 +24,7 @@ export function fetchProfile({ commit }) {
 }
 
 export function updateProfile({ commit }, payload) {
-  axios
+  return axios
     .post('/update_profile', payload)
     .then(({ data: { success, data } }) => {
       if (success) {
@@ -36,36 +36,36 @@ export function updateProfile({ commit }, payload) {
 }
 
 export function changePassword(store, payload) {
-  axios
+  return axios
     .post('/change_password', payload)
     .then(({ data: { success } }) => success)
     .catch(() => false);
 }
 
 export function signup({ commit }, payload) {
-  axios
+  return axios
     .post('/signup', payload)
-    .then(({ data: { success, data, token } }) => {
+    .then(({ data: { success, data, token: { token } } }) => {
       if (success) {
         commit(SAVE_USER, data);
         commit(SAVE_TOKEN, token);
       }
       return success;
     })
-    .catch(() => false);
+    .catch(({ response: { data } }) => data);
 }
 
 export function authenticate({ commit }, payload) {
-  axios
+  return axios
     .post('/authenticate', payload)
-    .then(({ data: { success, data, token } }) => {
+    .then(({ data: { success, data, token: { token } } }) => {
       if (success) {
         commit(SAVE_USER, data);
         commit(SAVE_TOKEN, token);
       }
-      return success;
+      return { success };
     })
-    .catch(() => false);
+    .catch(({ response: { data } }) => data);
 }
 
 export function deleteUser({ commit }) {
@@ -74,7 +74,7 @@ export function deleteUser({ commit }) {
 }
 
 export function createTask({ commit }, payload) {
-  axios
+  return axios
     .post('/tasks', payload)
     .then(({ data: { success, data, token } }) => {
       if (success) {
@@ -86,7 +86,7 @@ export function createTask({ commit }, payload) {
 }
 
 export function markTaskAsDone({ commit }, task) {
-  axios
+  return axios
     .post(`/tasks/${task.id}/done`)
     .then(({ data: { success, data } }) => {
       if (success) {
@@ -98,7 +98,7 @@ export function markTaskAsDone({ commit }, task) {
 }
 
 export function fetchTasks({ commit }) {
-  axios
+  return axios
     .get('/tasks')
     .then(({ data: { success, data } }) => {
       if (success) {
@@ -110,7 +110,7 @@ export function fetchTasks({ commit }) {
 }
 
 export function updateTask({ commit }, task) {
-  axios
+  return axios
     .put(`/tasks/${task.id}`, task)
     .then(({ data: { success, data } }) => {
       if (success) {
@@ -123,7 +123,7 @@ export function updateTask({ commit }, task) {
 
 export function deleteTask({ commit }, task) {
   const id = typeof task === 'object' ? task.id : task;
-  axios
+  return axios
     .delete(`/tasks/${id}`)
     .then(() => {
       commit(DELETE_TASK, id);
@@ -133,7 +133,7 @@ export function deleteTask({ commit }, task) {
 }
 
 export function updateSchedule({ commit }, schedule) {
-  axios
+  return axios
     .put(`/tasks/update_schedule/${schedule.id}`)
     .then(({ data: { success, data } }) => {
       if (success) {
