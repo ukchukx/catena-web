@@ -32,14 +32,14 @@ export function updateProfile({ commit }, payload) {
       }
       return success;
     })
-    .catch(() => false);
+    .catch(({ response: { data } }) => data);
 }
 
 export function changePassword(store, payload) {
   return axios
     .post('/change_password', payload)
-    .then(({ data: { success } }) => success)
-    .catch(() => false);
+    .then(({ data: { success, message } }) => ({ success, message }))
+    .catch(({ response: { data } }) => data);
 }
 
 export function signup({ commit }, payload) {
@@ -63,7 +63,7 @@ export function authenticate({ commit }, payload) {
         commit(SAVE_USER, data);
         commit(SAVE_TOKEN, token);
       }
-      return { success };
+      return success;
     })
     .catch(({ response: { data } }) => data);
 }
