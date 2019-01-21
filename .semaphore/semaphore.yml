@@ -1,5 +1,5 @@
 version: v1.0
-name: Catena web pipeline
+name: Catena web
 agent:
   machine:
     type: e1-standard-2
@@ -26,16 +26,16 @@ blocks:
           - checkout
           - cache restore node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json),node-modules-$SEMAPHORE_GIT_BRANCH,node-modules-master
       jobs:
-        - name: npm test
+        - name: run tests
           commands:
             - npm test
 promotions:
   - name: Deploy to staging
-  pipeline_file: staging-deploy.yml
-  auto_promote_on:
-    - result: passed
-      branch:
-        - develop
+    pipeline_file: staging-deploy.yml
+    auto_promote_on:
+      - result: passed
+        branch:
+          - develop
 
   - name: Deploy to production
-  pipeline_file: production-deploy.yml
+    pipeline_file: production-deploy.yml
