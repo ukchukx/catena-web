@@ -9,6 +9,11 @@
           </b-col>
         </b-row>
         <b-row class="mt-4">
+          <b-col sm="8" class="text-center mx-auto">
+            <flash-message/>
+          </b-col>
+        </b-row>
+        <b-row class="mt-4">
           <b-col sm="12" md="6" offset-md="3">
             <b-form @submit.stop.prevent="login()">
               <b-form-group label="Email address:" label-for="loginEmail">
@@ -46,9 +51,11 @@
 
 <script>
 import { mapActions } from 'vuex';
+import Flash from '@/mixins/Flash';
 
 export default {
   name: 'Login',
+  mixins: [Flash],
   data() {
     return {
       loginForm: {
@@ -71,11 +78,12 @@ export default {
       this.authenticate(this.loginForm)
         .then((success) => {
           if (!success) {
-            alert('Could not login');
+            this.showFlash('Could not login', 'error');
             return;
           }
           this.$router.replace(this.profilePath);
-        });
+        })
+        .catch(({ message }) => this.showFlash(message, 'error'));
     }
   }
 };

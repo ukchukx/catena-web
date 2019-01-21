@@ -47,7 +47,7 @@ router.beforeEach((to, from, next) => {
     const token = store.getters.token;
 
     if (!token.length) { // Not authenticated? Send user to login
-      next({ name: 'Login', query: { to: to.fullPath } });
+      next({ name: 'Login' });
     } else {
       next();
     }

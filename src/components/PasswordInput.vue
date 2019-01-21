@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable -->
   <div class="input-group mb-3">
     <input :type="type" class="form-control" v-model="val">
     <div class="input-group-append">
@@ -39,5 +40,5 @@ export default {
       this.show = !this.show;
     }
   }
-}
+};
 </script>

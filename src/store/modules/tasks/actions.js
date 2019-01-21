@@ -26,20 +26,20 @@ export function fetchProfile({ commit }) {
 export function updateProfile({ commit }, payload) {
   return axios
     .post('/update_profile', payload)
-    .then(({ data: { success, data } }) => {
+    .then(({ data: { success, data, message } }) => {
       if (success) {
         commit(SAVE_USER, data);
       }
-      return success;
+      return { success, message };
     })
-    .catch(({ response: { data } }) => data);
+    .catch(({ response: { data } }) => Promise.reject(data));
 }
 
 export function changePassword(store, payload) {
   return axios
     .post('/change_password', payload)
     .then(({ data: { success, message } }) => ({ success, message }))
-    .catch(({ response: { data } }) => data);
+    .catch(({ response: { data } }) => Promise.reject(data));
 }
 
 export function signup({ commit }, payload) {
@@ -52,7 +52,7 @@ export function signup({ commit }, payload) {
       }
       return success;
     })
-    .catch(({ response: { data } }) => data);
+    .catch(({ response: { data } }) => Promise.reject(data));
 }
 
 export function authenticate({ commit }, payload) {
@@ -65,7 +65,7 @@ export function authenticate({ commit }, payload) {
       }
       return success;
     })
-    .catch(({ response: { data } }) => data);
+    .catch(({ response: { data } }) => Promise.reject(data));
 }
 
 export function deleteUser({ commit }) {
