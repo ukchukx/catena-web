@@ -47,6 +47,9 @@
           </div>
         </div>
       </div>
+      <div class="col-sm-12 col-md-9">
+        <router-view/>
+      </div>
     </div>
   </div>
 </template>

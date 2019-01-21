@@ -63,7 +63,7 @@ export default {
         email: 'test@email.com'
       },
       signupPath: { name: 'Signup' },
-      profilePath: { name: 'Profile' }
+      profilePath: { name: 'Tasks' }
     };
   },
   computed: {

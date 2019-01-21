@@ -3,6 +3,8 @@ import VueRouter from 'vue-router';
 import Login from '@/components/Login';
 import Signup from '@/components/Signup';
 import Profile from '@/components/Profile';
+import Tasks from '@/components/Tasks';
+import CreateTask from '@/components/CreateTask';
 import store from '@/store';
 
 Vue.use(VueRouter);
@@ -33,7 +35,19 @@ const router = new VueRouter({
       component: Profile,
       meta: {
         requiresAuth: true
-      }
+      },
+      children: [
+        {
+          path: '',
+          name: 'Tasks',
+          component: Tasks
+        },
+        {
+          path: 'create-task',
+          name: 'CreateTask',
+          component: CreateTask
+        }
+      ]
     },
     {
       path: '/*',
@@ -54,7 +68,7 @@ router.beforeEach((to, from, next) => {
   } else if (to.matched.some(record => record.meta.authRoute)) {
     const token = store.getters.token;
     if (token.length) { // authenticated? Send user away from here
-      next({ name: 'Profile' });
+      next({ name: 'Tasks' });
     } else {
       next();
     }
