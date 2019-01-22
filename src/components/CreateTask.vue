@@ -1,13 +1,7 @@
 <template>
   <!-- eslint-disable -->
   <div>
-    <div class="row">
-      <div class="col-sm-6 col-md-2">
-        <router-link :to="profilePath" class="btn btn-outline-secondary btn-sm btn-block text-left">
-          <i class="fa fa-chevron-left"></i>
-        </router-link>
-      </div>
-    </div>
+    <ProfileLink/>
     <div class="row mt-4">
       <div class="col-sm-12 col-md-6 mx-auto">
         <b-form @submit.stop.prevent="onSubmit()">
@@ -31,14 +25,17 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import Flash from '@/mixins/Flash';
+import ProfileLink from '@/components/ProfileLink';
 import dateGenerator from '@/utils/dateGenerator';
 
 export default {
   name: 'CreateTask',
+  components: {
+    ProfileLink
+  },
   mixins: [Flash],
   data() {
     return {
-      profilePath: { name: 'Tasks' },
       form: {
         name: 'Test',
         description: '',
@@ -84,7 +81,7 @@ export default {
           this.busy = false;
           if (success) {
             this.showFlash(message, 'success');
-            this.$router.push(this.profilePath);
+            this.$router.push({ name: 'Tasks' });
             return;
           }
           this.showFlash(message, 'warning');

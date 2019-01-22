@@ -5,6 +5,7 @@ import Signup from '@/components/Signup';
 import Profile from '@/components/Profile';
 import Tasks from '@/components/Tasks';
 import CreateTask from '@/components/CreateTask';
+import TaskReport from '@/components/TaskReport';
 import store from '@/store';
 
 Vue.use(VueRouter);
@@ -46,6 +47,11 @@ const router = new VueRouter({
           path: 'create-task',
           name: 'CreateTask',
           component: CreateTask
+        },
+        {
+          path: 'task/:id',
+          name: 'TaskReport',
+          component: TaskReport
         }
       ]
     },
