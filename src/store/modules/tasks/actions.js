@@ -7,6 +7,7 @@ import {
   SAVE_TASKS,
   SAVE_TASK,
   DELETE_TASK,
+  DELETE_TASKS,
   SAVE_SCHEDULE
 } from './mutation-types';
 
@@ -71,18 +72,19 @@ export function authenticate({ commit }, payload) {
 export function deleteUser({ commit }) {
   commit(DELETE_USER);
   commit(DELETE_TOKEN);
+  commit(DELETE_TASKS);
 }
 
 export function createTask({ commit }, payload) {
   return axios
     .post('/tasks', payload)
-    .then(({ data: { success, data, token } }) => {
+    .then(({ data: { success, data, message } }) => {
       if (success) {
         commit(SAVE_TASK, data);
       }
-      return success;
+      return { success, message };
     })
-    .catch(() => false);
+    .catch(({ success, message }) => Promise.reject({ success, message }));
 }
 
 export function markTaskAsDone({ commit }, task) {
@@ -112,13 +114,13 @@ export function fetchTasks({ commit }) {
 export function updateTask({ commit }, task) {
   return axios
     .put(`/tasks/${task.id}`, task)
-    .then(({ data: { success, data } }) => {
+    .then(({ data: { success, data, message } }) => {
       if (success) {
         commit(SAVE_TASK, data);
       }
-      return success;
+      return { success, message };
     })
-    .catch(() => false);
+    .catch(({ success, message }) => Promise.reject({ success, message }));
 }
 
 export function deleteTask({ commit }, task) {
@@ -129,7 +131,7 @@ export function deleteTask({ commit }, task) {
       commit(DELETE_TASK, id);
       return true;
     })
-    .catch(() => false);
+    .catch(({ success, message }) => Promise.reject({ success, message }));
 }
 
 export function updateSchedule({ commit }, schedule) {

@@ -8,6 +8,7 @@ import {
   SAVE_TASKS,
   SAVE_TASK,
   DELETE_TASK,
+  DELETE_TASKS,
   SAVE_SCHEDULE
 } from './mutation-types';
 
@@ -34,7 +35,7 @@ const mutations = {
     const idx = state.tasks.findIndex(({ id }) => task.id === id);
 
     if (idx !== -1) {
-      state.splice(idx, 1, task);
+      state.tasks.splice(idx, 1, task);
     } else {
       state.tasks.push(task);
     }
@@ -59,6 +60,9 @@ const mutations = {
   },
   [DELETE_TASK](state, id) {
     state.tasks = state.tasks.filter(task => id !== task.id);
+  },
+  [DELETE_TASKS](state) {
+    state.tasks = [];
   },
   [DELETE_TOKEN](state) {
     state.token = '';

@@ -48,7 +48,11 @@
         </div>
       </div>
       <div class="col-sm-12 col-md-9">
-        <router-view/>
+        <div class="card">
+          <div class="card-body">
+            <router-view/>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -91,9 +95,10 @@ export default {
   },
   created() {
     this.updateForm.username = this.user.username || this.user.email;
+    this.fetchTasks();
   },
   methods: {
-    ...mapActions(['changePassword', 'updateProfile', 'deleteUser']),
+    ...mapActions(['changePassword', 'updateProfile', 'deleteUser', 'fetchTasks']),
     handlePasswordForm() {
       this.changePassword(this.passwordForm)
         .then(({ success, message = 'Password changed' }) => {
