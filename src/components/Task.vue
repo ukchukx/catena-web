@@ -55,7 +55,8 @@ export default {
         description: this.task.description,
         id: this.task.id
       },
-      showForm: false
+      showForm: false,
+      busy: false
     };
   },
   computed: {
@@ -87,16 +88,24 @@ export default {
       this.showForm = !this.showForm;
     },
     doDelete(task) {
+      if (this.busy) return;
       if (!confirm('Are you sure?')) return; // eslint-disable-line no-alert
+
+      this.busy = true;
+
       this.deleteTask(task)
         .then((success) => {
+          this.busy = false;
           if (success) {
             this.showFlash('Task deleted', 'success');
           } else {
             this.showFlash('Task not deleted', 'warning');
           }
         })
-        .catch(({ message }) => this.showFlash(message, 'warning'));
+        .catch(({ message }) => {
+          this.busy = false;
+          this.showFlash(message, 'warning');
+        });
     },
     mark(task) {
       this.markTaskAsDone(task)
@@ -110,15 +119,22 @@ export default {
         .catch(({ message }) => this.showFlash(message, 'warning'));
     },
     update() {
+      if (this.busy) return;
+      this.busy = true;
+
       this.updateTask(this.form)
         .then((success) => {
+          this.busy = false;
           if (success) {
             this.showFlash('Task updated', 'success');
           } else {
             this.showFlash('Task not updated', 'warning');
           }
         })
-        .catch(({ message }) => this.showFlash(message, 'warning'));
+        .catch(({ message }) => {
+          this.busy = false;
+          this.showFlash(message, 'warning');
+        });
     }
   }
 };

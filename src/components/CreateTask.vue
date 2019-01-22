@@ -68,15 +68,20 @@ export default {
   methods: {
     ...mapActions(['createTask']),
     onSubmit() {
+      if (this.busy) return;
+      this.busy = true;
+
       this.form.schedules = [...dateGenerator([...this.selectedDays])]
         .map(date => ({ due_date: date.toISOString() }));
       if (!this.form.schedules.length) {
+        this.busy = false;
         this.showFlash('No schedules can be created from your selection', 'warning');
         return;
       }
 
       this.createTask(this.form)
         .then(({ success, message }) => {
+          this.busy = false;
           if (success) {
             this.showFlash(message, 'success');
             this.$router.push(this.profilePath);
@@ -84,7 +89,10 @@ export default {
           }
           this.showFlash(message, 'warning');
         })
-        .catch(({ message }) => this.showFlash(message, 'warning'));
+        .catch(({ message }) => {
+          this.busy = false;
+          this.showFlash(message, 'warning');
+        });
     },
     generateDates(p) {
       return dateGenerator(p);

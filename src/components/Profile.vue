@@ -78,7 +78,8 @@ export default {
         password: '',
         new_password: ''
       },
-      loginPath: { name: 'Login' }
+      loginPath: { name: 'Login' },
+      busy: false
     };
   },
   computed: {
@@ -100,8 +101,12 @@ export default {
   methods: {
     ...mapActions(['changePassword', 'updateProfile', 'deleteUser', 'fetchTasks']),
     handlePasswordForm() {
+      if (this.busy) return;
+      this.busy = true;
+
       this.changePassword(this.passwordForm)
         .then(({ success, message = 'Password changed' }) => {
+          this.busy = false;
           if (success) {
             this.showFlash(message, 'info');
             this.passwordForm.password = '';
@@ -112,18 +117,28 @@ export default {
           }
           this.showFlash(message, 'warning');
         })
-        .catch(({ message = 'Could not change password' }) => this.showFlash(message, 'warning'));
+        .catch(({ message = 'Could not change password' }) => {
+          this.busy = false;
+          this.showFlash(message, 'warning');
+        });
     },
     handleUpdateForm() {
+      if (this.busy) return;
+      this.busy = true;
+
       this.updateProfile(this.updateForm)
         .then(({ success, message }) => {
+          this.busy = false;
           if (success) {
             this.showFlash('Username updated', 'success');
             return;
           }
           this.showFlash(message, 'warning');
         })
-        .catch(({ message = 'Could not update username' }) => this.showFlash(message, 'warning'));
+        .catch(({ message = 'Could not update username' }) => {
+          this.busy = false;
+          this.showFlash(message, 'warning');
+        });
     },
     logout() {
       this.deleteUser();

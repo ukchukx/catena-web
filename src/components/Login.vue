@@ -63,7 +63,8 @@ export default {
         email: 'test@email.com'
       },
       signupPath: { name: 'Signup' },
-      profilePath: { name: 'Tasks' }
+      profilePath: { name: 'Tasks' },
+      busy: false
     };
   },
   computed: {
@@ -75,15 +76,22 @@ export default {
   methods: {
     ...mapActions(['authenticate']),
     login() {
+      if (this.busy) return;
+      this.busy = true;
+
       this.authenticate(this.loginForm)
         .then((success) => {
+          this.busy = false;
           if (!success) {
             this.showFlash('Could not login', 'error');
             return;
           }
           this.$router.replace(this.profilePath);
         })
-        .catch(({ message }) => this.showFlash(message, 'error'));
+        .catch(({ message }) => {
+          this.busy = false;
+          this.showFlash(message, 'error');
+        });
     }
   }
 };
