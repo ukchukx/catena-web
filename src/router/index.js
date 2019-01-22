@@ -1,12 +1,13 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Login from '@/components/Login';
-import Signup from '@/components/Signup';
-import Profile from '@/components/Profile';
-import Tasks from '@/components/Tasks';
-import CreateTask from '@/components/CreateTask';
-import TaskReport from '@/components/TaskReport';
 import store from '@/store';
+
+const Login = () => import('@/components/Login');
+const Signup = () => import('@/components/Signup');
+const Profile = () => import(/* webpackChunkName: "group-profile" */ '@/components/Profile');
+const Tasks = () => import(/* webpackChunkName: "group-profile" */ '@/components/Tasks');
+const CreateTask = () => import('@/components/CreateTask');
+const TaskReport = () => import('@/components/TaskReport');
 
 Vue.use(VueRouter);
 
