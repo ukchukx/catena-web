@@ -21,7 +21,7 @@ export function fetchProfile({ commit }) {
       }
       return success;
     })
-    .catch(() => false);
+    .catch(({ response: { data } }) => Promise.reject(data));
 }
 
 export function updateProfile({ commit }, payload) {
@@ -84,7 +84,7 @@ export function createTask({ commit }, payload) {
       }
       return { success, message };
     })
-    .catch(({ success, message }) => Promise.reject({ success, message }));
+    .catch(({ response: { data } }) => Promise.reject(data));
 }
 
 export function markTaskAsDone({ commit }, task) {
@@ -96,7 +96,7 @@ export function markTaskAsDone({ commit }, task) {
       }
       return success;
     })
-    .catch(() => false);
+    .catch(({ response: { data } }) => Promise.reject(data));
 }
 
 export function fetchTasks({ commit }) {
@@ -108,7 +108,7 @@ export function fetchTasks({ commit }) {
       }
       return success;
     })
-    .catch(() => false);
+    .catch(({ response: { data } }) => Promise.reject(data));
 }
 
 export function updateTask({ commit }, task) {
@@ -120,7 +120,7 @@ export function updateTask({ commit }, task) {
       }
       return { success, message };
     })
-    .catch(({ success, message }) => Promise.reject({ success, message }));
+    .catch(({ response: { data } }) => Promise.reject(data));
 }
 
 export function deleteTask({ commit }, task) {
@@ -131,7 +131,7 @@ export function deleteTask({ commit }, task) {
       commit(DELETE_TASK, id);
       return true;
     })
-    .catch(({ success, message }) => Promise.reject({ success, message }));
+    .catch(({ response: { data } }) => Promise.reject(data));
 }
 
 export function updateSchedule({ commit }, schedule) {
@@ -143,5 +143,5 @@ export function updateSchedule({ commit }, schedule) {
       }
       return success;
     })
-    .catch(() => false);
+    .catch(({ response: { data } }) => Promise.reject(data));
 }

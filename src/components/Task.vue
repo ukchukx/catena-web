@@ -10,7 +10,11 @@
           Edit
           <i class="fa fa-chevron-down"></i>
         </button>
-        <button class="btn btn-sm btn-outline-info" @click.stop.prevent="mark(task)">Mark as done</button>
+        <button
+          v-if="canMark"
+          class="btn btn-sm btn-outline-info"
+          @click.stop.prevent="mark(task)"
+        >Mark as done</button>
         <button class="btn btn-sm btn-outline-danger" @click.stop.prevent="doDelete(task)">Delete</button>
       </div>
     </div>
@@ -60,14 +64,30 @@ export default {
       const { form: { name, description } } = this;
       return name.length >= 3 &&
         !this.tasks.some(t => name === t.name && t.description === description);
+    },
+    canMark() {
+      return !!this.todaySchedule && !this.todaySchedule.done;
+    },
+    todaySchedule() {
+      const today = new Date();
+      today.setUTCHours(12, 0, 0, 0);
+
+      return this.task.schedules
+        .find(({ due_date }) => {
+          const dueDate = new Date(due_date);
+          return today.getFullYear() === dueDate.getFullYear() &&
+            today.getMonth() === dueDate.getMonth() &&
+            today.getDate() === dueDate.getDate();
+        });
     }
   },
   methods: {
-    ...mapActions(['deleteTask', 'updateTask']),
+    ...mapActions(['deleteTask', 'updateTask', 'markTaskAsDone']),
     toggleForm() {
       this.showForm = !this.showForm;
     },
     doDelete(task) {
+      if (!confirm('Are you sure?')) return; // eslint-disable-line no-alert
       this.deleteTask(task)
         .then((success) => {
           if (success) {
@@ -79,7 +99,15 @@ export default {
         .catch(({ message }) => this.showFlash(message, 'warning'));
     },
     mark(task) {
-      //
+      this.markTaskAsDone(task)
+        .then((success) => {
+          if (success) {
+            this.showFlash('Done for today', 'success');
+            return;
+          }
+          this.showFlash('Could not complete task', 'warning');
+        })
+        .catch(({ message }) => this.showFlash(message, 'warning'));
     },
     update() {
       this.updateTask(this.form)
