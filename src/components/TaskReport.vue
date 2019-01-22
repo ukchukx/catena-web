@@ -6,10 +6,10 @@
       <div class="col-sm-12">
         <h3>{{ task.name }}</h3>
       </div>
-      <div class="col-sm-12 mt-3">
+      <!-- <div class="col-sm-12 mt-3">
         <h6>Current streak: 0</h6>
         <h6>Longest streak: 0</h6>
-      </div>
+      </div>-->
       <div class="col-sm-12 col-md-6 mx-auto mt-4">
         <v-calendar :is-expanded="true" :attributes="events"/>
       </div>
