@@ -15,12 +15,12 @@
         <button
           v-if="canMark"
           class="btn btn-sm btn-outline-info"
-          @click.stop.prevent="mark(task)"
-        >Mark as done</button>
-        <button class="btn btn-sm btn-outline-danger" @click.stop.prevent="doDelete(task)">Delete</button>
+          @click.stop.prevent="toggleScheduleForm()"
+        >I've done this today</button>
+        <button class="btn btn-sm btn-outline-danger" @click.stop.prevent="doDelete()">Delete</button>
       </div>
     </div>
-    <hr v-if="showForm">
+    <hr v-if="showForm || showScheduleForm">
     <div class="row" v-if="showForm">
       <div class="col-md-6 col-sm-12">
         <b-form @submit.stop.prevent="update()">
@@ -31,6 +31,16 @@
             <b-form-textarea :rows="3" v-model="form.description" placeholder="Description"/>
           </b-form-group>
           <b-button :disabled="!formOk" type="submit" variant="primary">Save</b-button>
+        </b-form>
+      </div>
+    </div>
+    <div class="row" v-if="showScheduleForm">
+      <div class="col-md-6 col-sm-12">
+        <b-form @submit.stop.prevent="mark()">
+          <b-form-group label="Remarks (optional)">
+            <b-form-textarea :rows="3" v-model="scheduleForm.remarks" placeholder="Remarks"/>
+          </b-form-group>
+          <b-button type="submit" variant="primary">Mark as done</b-button>
         </b-form>
       </div>
     </div>
@@ -57,7 +67,13 @@ export default {
         description: this.task.description,
         id: this.task.id
       },
+      scheduleForm: {
+        id: 0,
+        remarks: ''
+      },
+      remarks: '',
       showForm: false,
+      showScheduleForm: false,
       busy: false
     };
   },
@@ -88,17 +104,24 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['deleteTask', 'updateTask', 'markTaskAsDone']),
+    ...mapActions(['deleteTask', 'updateTask', 'markTaskAsDone', 'updateSchedule']),
     toggleForm() {
       this.showForm = !this.showForm;
     },
-    doDelete(task) {
+    toggleScheduleForm() {
+      this.showScheduleForm = !this.showScheduleForm;
+      if (this.showScheduleForm && !!this.todaySchedule) this.scheduleForm.id = this.todaySchedule.id;
+    },
+    resetScheduleForm() {
+      this.scheduleForm = { id: 0, remarks: '' };
+    },
+    doDelete() {
       if (this.busy) return;
       if (!confirm('Are you sure?')) return; // eslint-disable-line no-alert
 
       this.busy = true;
 
-      this.deleteTask(task)
+      this.deleteTask(this.task)
         .then((success) => {
           this.busy = false;
           if (success) {
@@ -112,14 +135,18 @@ export default {
           this.showFlash(message, 'warning');
         });
     },
-    mark(task) {
-      this.markTaskAsDone(task)
+    mark() {
+      this.markTaskAsDone(this.task)
         .then((success) => {
           if (success) {
+            if (this.scheduleForm.remarks.length) this.updateSchedule(this.scheduleForm);
+            this.resetScheduleForm();
+            this.toggleScheduleForm();
             this.showFlash('Done for today', 'success');
             return;
           }
           this.showFlash('Could not complete task', 'warning');
+          this.resetScheduleForm();
         })
         .catch(({ message }) => this.showFlash(message, 'warning'));
     },

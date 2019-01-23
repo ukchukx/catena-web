@@ -18,27 +18,35 @@ const initialState = {
   tasks: []
 };
 
+const saveTask = (state, task) => {
+  const idx = state.tasks.findIndex(({ id }) => task.id === id);
+
+  if (idx !== -1) {
+    state.tasks.splice(idx, 1, task);
+  } else {
+    state.tasks.push(task);
+  }
+};
+
+const saveTasks = (state, tasks) => {
+  state.tasks = tasks;
+};
+
 const mutations = {
   [SAVE_TOKEN](state, token) {
     state.token = token;
   },
   [SAVE_USER](state, profile) {
     const { tasks = [] } = profile;
-    state.tasks = tasks;
+    saveTasks(state, tasks);
     delete profile.tasks;
     state.user = profile;
   },
   [SAVE_TASKS](state, tasks) {
-    state.tasks = tasks;
+    saveTasks(state, tasks);
   },
   [SAVE_TASK](state, task) {
-    const idx = state.tasks.findIndex(({ id }) => task.id === id);
-
-    if (idx !== -1) {
-      state.tasks.splice(idx, 1, task);
-    } else {
-      state.tasks.push(task);
-    }
+    saveTask(state, task);
   },
   [SAVE_SCHEDULE](state, schedule) {
     const task = state.tasks.find(({ id }) => schedule.task_id === id);
@@ -52,7 +60,7 @@ const mutations = {
         task.schedules.push(schedule);
       }
 
-      [SAVE_TASK](task);
+      saveTask(state, task);
     }
   },
   [DELETE_USER](state) {

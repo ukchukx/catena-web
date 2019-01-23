@@ -136,7 +136,7 @@ export function deleteTask({ commit }, task) {
 
 export function updateSchedule({ commit }, schedule) {
   return axios
-    .put(`/tasks/update_schedule/${schedule.id}`)
+    .put(`/tasks/update_schedule/${schedule.id}`, schedule)
     .then(({ data: { success, data } }) => {
       if (success) {
         commit(SAVE_SCHEDULE, data);
