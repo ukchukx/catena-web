@@ -128,6 +128,11 @@ export default {
           return !isToday ? Object.assign(obj, highlightStyle) : Object.assign(obj, dotStyle);
         });
     }
+  },
+  updated() {
+    if (!this.task) {
+      this.$router.replace({ name: 'Tasks' });
+    }
   }
 };
 </script>
