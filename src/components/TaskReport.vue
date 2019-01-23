@@ -66,7 +66,7 @@ export default {
         streaks.push(x);
       }
 
-      return Math.max(...streaks.map(streak => streak.length));
+      return !streaks.length ? 0 : Math.max(...streaks.map(streak => streak.length));
     },
     streakable() {
       return this.task.schedules
