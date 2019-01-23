@@ -21,7 +21,9 @@ Vue.component('v-calendar', Calendar);
 Vue.use(VueFlashMessage, { createShortcuts: false });
 
 window.axios = axios;
-axios.defaults.baseURL = 'http://127.0.0.1:3333/api/v1';
+const devAPI = 'http://127.0.0.1:3333/api/v1';
+const prodAPI = ''; // TODO: Configure prod api
+axios.defaults.baseURL = process.env.NODE_ENV !== 'production' ? devAPI : prodAPI;
 axios.interceptors.request.use((config) => {
   config.headers.Authorization = `Bearer ${store.getters.token}`;
   return config;
