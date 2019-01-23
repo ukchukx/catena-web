@@ -14,11 +14,15 @@ export default function* dateGenerator(selectedDays = []) {
   const end = new Date(start.getFullYear(), 11, 31);
   end.setUTCHours(12, 0, 0, 0);
 
-  if (selectedDays.indexOf(days[today.getDay()]) !== -1) yield today;
+  if (selectedDays.length) {
+    if (selectedDays.indexOf(days[today.getDay()]) !== -1) yield today;
+  } else {
+    yield today;
+  }
 
   while (start <= end) {
     start.setDate(start.getDate() + 1);
-    if (selectedDays.indexOf(days[start.getDay()]) === -1) continue;
+    if (selectedDays.length && selectedDays.indexOf(days[start.getDay()]) === -1) continue;
     yield new Date(
       start.getFullYear(),
       start.getMonth(),

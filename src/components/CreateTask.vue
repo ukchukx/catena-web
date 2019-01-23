@@ -6,13 +6,23 @@
       <div class="col-sm-12 col-md-6 mx-auto">
         <b-form @submit.stop.prevent="onSubmit()">
           <b-form-group label="Name">
-            <b-form-input type="text" v-model="form.name" required placeholder="Name"></b-form-input>
+            <b-form-input type="text" v-model="form.name" required placeholder="Task name..."></b-form-input>
           </b-form-group>
           <b-form-group label="Description">
-            <b-form-textarea :rows="3" v-model="form.description" placeholder="Description"></b-form-textarea>
+            <b-form-textarea
+              :rows="3"
+              v-model="form.description"
+              placeholder="Task description (optional)"
+            ></b-form-textarea>
           </b-form-group>
           <b-form-group>
+            <b-form-radio-group v-model="selectedType" :options="typeOptions"/>
+          </b-form-group>
+          <b-form-group v-if="isDaily">
             <b-form-checkbox-group v-model="selectedDays" :options="dayOptions"/>
+          </b-form-group>
+          <b-form-group v-if="isMonthly" label="Choose day (1-28)">
+            <b-form-input :min="1" :max="28" v-model.number="selectedDate" type="number"/>
           </b-form-group>
 
           <b-button :disabled="!formOk" type="submit" variant="primary">Create</b-button>
@@ -37,10 +47,16 @@ export default {
   data() {
     return {
       form: {
-        name: 'Test',
+        name: '',
         description: '',
         schedules: []
       },
+      selectedType: 'daily',
+      selectedDate: 1,
+      typeOptions: [
+        { text: 'Daily', value: 'daily' },
+        { text: 'Monthly', value: 'monthly' }
+      ],
       selectedDays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
       dayOptions: [
         { text: 'Monday', value: 'Mon' },
@@ -55,21 +71,36 @@ export default {
   },
   computed: {
     ...mapGetters(['user', 'tasks']),
+    isDaily() {
+      return this.selectedType === 'daily';
+    },
+    isMonthly() {
+      return this.selectedType === 'monthly';
+    },
     formOk() {
       const { form: { name }, selectedDays } = this;
-      return !!selectedDays.length &&
-        name.length >= 3 &&
-        this.tasks.every(t => name !== t.name);
+      const basicCondition = name.length >= 3 && this.tasks.every(t => name !== t.name);
+
+      return this.isDaily ? !!selectedDays.length && basicCondition : basicCondition;
     }
   },
   methods: {
     ...mapActions(['createTask']),
     onSubmit() {
-      if (this.busy) return;
-      this.busy = true;
+      if (this.busy) {
+        this.showFlash('Busy...', 'info', { timeout: 1000 });
+        return;
+      }
 
-      this.form.schedules = [...dateGenerator([...this.selectedDays])]
-        .map(date => ({ due_date: date.toISOString() }));
+      this.busy = true;
+      let schedules = [...dateGenerator(this.isDaily ? [...this.selectedDays] : [])];
+
+      if (this.isMonthly) { // Filter out the unneeded dates
+        schedules = schedules.filter(date => date.getDate() === this.selectedDate);
+      }
+
+      this.form.schedules = schedules.map(date => ({ due_date: date.toISOString() }));
+
       if (!this.form.schedules.length) {
         this.busy = false;
         this.showFlash('No schedules can be created from your selection', 'warning');
@@ -90,9 +121,6 @@ export default {
           this.busy = false;
           this.showFlash(message, 'warning');
         });
-    },
-    generateDates(p) {
-      return dateGenerator(p);
     }
   }
 };
