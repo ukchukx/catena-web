@@ -59,8 +59,8 @@ export default {
   data() {
     return {
       loginForm: {
-        password: 'password',
-        email: 'test@email.com'
+        password: '',
+        email: ''
       },
       signupPath: { name: 'Signup' },
       profilePath: { name: 'Tasks' },
