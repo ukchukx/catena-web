@@ -91,8 +91,8 @@ export default {
           let dot;
           if (schedule.done) { // done
             highlight = {
-              backgroundColor: '#66b3cc',
-              borderColor: '#53a9c6',
+              backgroundColor: '#66CC7F',
+              borderColor: '#35B355',
               borderWidth: '2px'
             };
           } else if (isToday) { // today
@@ -103,14 +103,14 @@ export default {
             };
           } else if (this.today <= date) { // upcoming
             highlight = {
-              backgroundColor: '#8B8C8B',
-              borderColor: '#333333',
+              backgroundColor: '#D3D3D3',
+              borderColor: '#8B8C8B',
               borderWidth: '2px'
             };
           } else { // missed
             highlight = {
-              backgroundColor: '#ff8080',
-              borderColor: '#ff6666',
+              backgroundColor: '#FF8080',
+              borderColor: '#FF6666',
               borderWidth: '2px'
             };
           }
@@ -145,6 +145,7 @@ export default {
 }
 .streak {
   font-size: 3.5rem;
+  color: #999;
 }
 </style>
 
