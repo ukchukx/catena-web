@@ -3,12 +3,9 @@ import * as getters from './getters';
 import {
   SAVE_USER,
   SAVE_TOKEN,
-  DELETE_USER,
-  DELETE_TOKEN,
   SAVE_TASKS,
   SAVE_TASK,
   DELETE_TASK,
-  DELETE_TASKS,
   SAVE_SCHEDULE
 } from './mutation-types';
 
@@ -63,17 +60,8 @@ const mutations = {
       saveTask(state, task);
     }
   },
-  [DELETE_USER](state) {
-    state.user = {};
-  },
   [DELETE_TASK](state, id) {
     state.tasks = state.tasks.filter(task => id !== task.id);
-  },
-  [DELETE_TASKS](state) {
-    state.tasks = [];
-  },
-  [DELETE_TOKEN](state) {
-    state.token = '';
   }
 };
 

@@ -2,12 +2,9 @@ import axios from 'axios';
 import {
   SAVE_USER,
   SAVE_TOKEN,
-  DELETE_USER,
-  DELETE_TOKEN,
   SAVE_TASKS,
   SAVE_TASK,
   DELETE_TASK,
-  DELETE_TASKS,
   SAVE_SCHEDULE
 } from './mutation-types';
 
@@ -70,9 +67,9 @@ export function authenticate({ commit }, payload) {
 }
 
 export function deleteUser({ commit }) {
-  commit(DELETE_USER);
-  commit(DELETE_TOKEN);
-  commit(DELETE_TASKS);
+  commit(SAVE_USER, {});
+  commit(SAVE_TOKEN, '');
+  commit(SAVE_TASKS, []);
 }
 
 export function createTask({ commit }, payload) {
