@@ -13,7 +13,7 @@ import {
 
 export function fetchProfile({ commit }) {
   return axios
-    .get('/me')
+    .get('/profile')
     .then(({ data: { success, data, token } }) => {
       if (success) {
         commit(SAVE_USER, data);
@@ -26,7 +26,7 @@ export function fetchProfile({ commit }) {
 
 export function updateProfile({ commit }, payload) {
   return axios
-    .post('/update_profile', payload)
+    .put('/profile', payload)
     .then(({ data: { success, data, message } }) => {
       if (success) {
         commit(SAVE_USER, data);
