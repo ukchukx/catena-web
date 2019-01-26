@@ -11,10 +11,9 @@ import {
 export function fetchProfile({ commit }) {
   return axios
     .get('/profile')
-    .then(({ data: { success, data, token } }) => {
+    .then(({ data: { success, data } }) => {
       if (success) {
         commit(SAVE_USER, data);
-        commit(SAVE_TOKEN, token);
       }
       return success;
     })
