@@ -81,8 +81,8 @@ export default {
     ...mapGetters(['tasks']),
     formOk() {
       const { form: { name, description } } = this;
-      return name.length >= 3 &&
-        !this.tasks.some(t => name === t.name && t.description === description);
+      return (name.trim().length >= 3 && !this.tasks.some(t => name.trim() === t.name)) ||
+        description.trim() !== this.task.description;
     },
     taskRoute() {
       return { name: 'TaskReport', params: { id: this.task.id } };
@@ -153,6 +153,8 @@ export default {
     update() {
       if (this.busy) return;
       this.busy = true;
+      this.form.description = this.form.description.trim();
+      this.form.name = this.form.name.trim();
 
       this.updateTask(this.form)
         .then((success) => {
