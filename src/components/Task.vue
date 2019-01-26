@@ -103,6 +103,9 @@ export default {
         });
     }
   },
+  created() {
+    if (this.todaySchedule) this.scheduleForm.id = this.todaySchedule.id;
+  },
   methods: {
     ...mapActions(['deleteTask', 'updateTask', 'markTaskAsDone', 'updateSchedule']),
     toggleForm() {
@@ -110,10 +113,9 @@ export default {
     },
     toggleScheduleForm() {
       this.showScheduleForm = !this.showScheduleForm;
-      if (this.showScheduleForm && !!this.todaySchedule) this.scheduleForm.id = this.todaySchedule.id;
     },
     resetScheduleForm() {
-      this.scheduleForm = { id: 0, remarks: '' };
+      this.scheduleForm.remarks = '';
     },
     doDelete() {
       if (this.busy) return;
