@@ -4,7 +4,7 @@ import Vue from 'vue';
 import BootstrapVue from 'bootstrap-vue';
 import VueFlashMessage from 'vue-flash-message';
 import axios from 'axios';
-import { setupCalendar, Calendar } from 'v-calendar';
+import { setupCalendar, Calendar, DatePicker } from 'v-calendar';
 import 'bootstrap/dist/css/bootstrap.css'; // eslint-disable-line import/no-extraneous-dependencies
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import 'vue-flash-message/dist/vue-flash-message.min.css';
@@ -18,6 +18,7 @@ Vue.config.productionTip = false;
 Vue.use(BootstrapVue);
 setupCalendar({ locale: 'en' });
 Vue.component('v-calendar', Calendar);
+Vue.component('v-date-picker', DatePicker);
 Vue.use(VueFlashMessage, { createShortcuts: false });
 
 window.axios = axios;

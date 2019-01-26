@@ -24,6 +24,14 @@
           <b-form-group v-if="isMonthly" label="Choose day (1-28)">
             <b-form-input :min="1" :max="28" v-model.number="selectedDate" type="number"/>
           </b-form-group>
+          <b-form-group>
+            <v-date-picker
+              mode="single"
+              :min-date="new Date()"
+              :max-date="endOfYear"
+              v-model="selectedEndDate"
+            />
+          </b-form-group>
 
           <b-button :disabled="!formOk" type="submit" variant="primary">Create</b-button>
         </b-form>
@@ -45,12 +53,23 @@ export default {
   },
   mixins: [Flash],
   data() {
+    const selectedEndDate = new Date();
+    selectedEndDate.setMonth(11);
+    selectedEndDate.setDate(31);
+    const endOfYear = new Date(
+      selectedEndDate.getFullYear(),
+      selectedEndDate.getMonth(),
+      selectedEndDate.getDate()
+    );
+
     return {
       form: {
         name: '',
         description: '',
         schedules: []
       },
+      endOfYear,
+      selectedEndDate,
       selectedType: 'daily',
       selectedDate: 1,
       typeOptions: [
@@ -79,7 +98,9 @@ export default {
     },
     formOk() {
       const { form: { name }, selectedDays } = this;
-      const basicCondition = name.length >= 3 && this.tasks.every(t => name !== t.name);
+      const basicCondition = name.length >= 3 &&
+        this.tasks.every(t => name !== t.name) &&
+        this.selectedEndDate !== null;
 
       return this.isDaily ? !!selectedDays.length && basicCondition : basicCondition;
     }
@@ -93,7 +114,8 @@ export default {
       }
 
       this.busy = true;
-      let schedules = [...dateGenerator(this.isDaily ? [...this.selectedDays] : [])];
+      const selectedDays = this.isDaily ? [...this.selectedDays] : [];
+      let schedules = [...dateGenerator({ selectedDays, end: this.selectedEndDate })];
 
       if (this.isMonthly) { // Filter out the unneeded dates
         schedules = schedules.filter(date => date.getDate() === this.selectedDate);

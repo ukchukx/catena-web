@@ -1,17 +1,19 @@
-export default function* dateGenerator(selectedDays = []) {
+export default function* dateGenerator({ selectedDays = [], end = null }) {
   const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const start = new Date();
   start.setUTCHours(12, 0, 0, 0);
+
   const today = new Date(
-    start.getFullYear(),
-    start.getMonth(),
-    start.getDate(),
-    start.getHours(),
-    start.getMinutes(),
-    start.getSeconds(),
-    start.getMilliseconds()
+    start.getUTCFullYear(),
+    start.getUTCMonth(),
+    start.getUTCDate(),
+    start.getUTCHours(),
+    start.getUTCMinutes(),
+    start.getUTCSeconds(),
+    start.getUTCMilliseconds()
   );
-  const end = new Date(start.getFullYear(), 11, 31);
+
+  if (!end) end = new Date(start.getFullYear(), 11, 31);
   end.setUTCHours(12, 0, 0, 0);
 
   if (selectedDays.length) {
@@ -24,13 +26,13 @@ export default function* dateGenerator(selectedDays = []) {
     start.setDate(start.getDate() + 1);
     if (selectedDays.length && selectedDays.indexOf(days[start.getDay()]) === -1) continue;
     yield new Date(
-      start.getFullYear(),
-      start.getMonth(),
-      start.getDate(),
-      start.getHours(),
-      start.getMinutes(),
-      start.getSeconds(),
-      start.getMilliseconds()
+      start.getUTCFullYear(),
+      start.getUTCMonth(),
+      start.getUTCDate(),
+      start.getUTCHours(),
+      start.getUTCMinutes(),
+      start.getUTCSeconds(),
+      start.getUTCMilliseconds()
     );
   }
 }
