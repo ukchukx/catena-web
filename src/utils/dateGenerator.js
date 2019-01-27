@@ -3,15 +3,7 @@ export default function* dateGenerator({ selectedDays = [], end = null }) {
   const start = new Date();
   start.setUTCHours(12, 0, 0, 0);
 
-  const today = new Date(
-    start.getUTCFullYear(),
-    start.getUTCMonth(),
-    start.getUTCDate(),
-    start.getUTCHours(),
-    start.getUTCMinutes(),
-    start.getUTCSeconds(),
-    start.getUTCMilliseconds()
-  );
+  const today = new Date(start);
 
   if (!end) end = new Date(start.getFullYear(), 11, 31);
   end.setUTCHours(12, 0, 0, 0);
@@ -25,14 +17,6 @@ export default function* dateGenerator({ selectedDays = [], end = null }) {
   while (start <= end) {
     start.setDate(start.getDate() + 1);
     if (selectedDays.length && selectedDays.indexOf(days[start.getDay()]) === -1) continue;
-    yield new Date(
-      start.getUTCFullYear(),
-      start.getUTCMonth(),
-      start.getUTCDate(),
-      start.getUTCHours(),
-      start.getUTCMinutes(),
-      start.getUTCSeconds(),
-      start.getUTCMilliseconds()
-    );
+    yield new Date(start);
   }
 }
