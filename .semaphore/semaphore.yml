@@ -51,11 +51,17 @@ blocks:
       prologue:
         commands:
           - checkout
-          - cache restore node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json),node-modules-$SEMAPHORE_GIT_BRANCH,node-modules-master
+          - cache restore node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum package.json),node-modules-$SEMAPHORE_GIT_BRANCH,node-modules-master
       jobs:
         - name: build
           commands:
             - npm run build
+            - cache store dist-$SEMAPHORE_WORKFLOW_ID dist
+            - cache store run.sh-$SEMAPHORE_WORKFLOW_ID run.sh
+            - cache store stop.sh-$SEMAPHORE_WORKFLOW_ID stop.sh
+            - cache store dockerignore-$SEMAPHORE_WORKFLOW_ID .dockerignore
+            - cache store Dockerfile-$SEMAPHORE_WORKFLOW_ID Dockerfile
+            - cache store docker-compose-$SEMAPHORE_WORKFLOW_ID docker-compose.yml
 promotions:
   - name: Deploy
     pipeline_file: production-deploy.yml
