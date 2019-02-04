@@ -20,7 +20,7 @@ blocks:
             - cache restore docker-compose-$SEMAPHORE_WORKFLOW_ID
             - echo 'Transferring app to production...'
             - chmod 0600 ~/ssh-key/id_rsa*
-            - scp -i ~/ssh-key/id_rsa -o StrictHostKeyChecking=no dist/* {run,stop}.sh Dockerfile .dockerignore docker-compose.yml ubuntu@109.237.25.250:~/apps/catena/web/
+            - scp -i ~/ssh-key/id_rsa -o StrictHostKeyChecking=no -pr dist {run,stop}.sh Dockerfile .dockerignore docker-compose.yml ubuntu@109.237.25.250:~/apps/catena/web/
 
   - name: Deploy
     task:
