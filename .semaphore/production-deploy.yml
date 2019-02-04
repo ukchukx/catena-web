@@ -10,16 +10,16 @@ blocks:
       secrets:
         - name: ssh-key
       jobs:
-        - name: deploy
+        - name: transfer files
           commands:
             - echo 'Deploying to production...'
-            - scp dist/* {run,stop}.sh Dockerfile .dockerignore docker-compose.yml ubuntu@109.237.25.250:~/apps/catena/web/
+            - scp -o StrictHostKeyChecking=no dist/* {run,stop}.sh Dockerfile .dockerignore docker-compose.yml ubuntu@109.237.25.250:~/apps/catena/web/
 
   - name: Deploy
     task:
       secrets:
         - name: ssh-key
       jobs:
-        - name: deploy
+        - name: deploy app
           commands:
-            - ssh ubuntu@109.237.25.250 'cd ~/apps/catena/web;docker build -t catena_web .;./run.sh'
+            - ssh -o StrictHostKeyChecking=no ubuntu@109.237.25.250 'cd ~/apps/catena/web;docker build -t catena_web .;./run.sh'
