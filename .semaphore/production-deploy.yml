@@ -14,7 +14,8 @@ blocks:
           commands:
             - echo 'Transferring app to production...'
             - chmod 0600 ~/id_rsa.pub
-            - scp -i ~/id_rsa.pub -o StrictHostKeyChecking=no dist/* {run,stop}.sh Dockerfile .dockerignore docker-compose.yml ubuntu@109.237.25.250:~/apps/catena/web/
+            - cp ~/id_rsa.pub ~/.ssh
+            - scp -o StrictHostKeyChecking=no dist/* {run,stop}.sh Dockerfile .dockerignore docker-compose.yml ubuntu@109.237.25.250:~/apps/catena/web/
 
   - name: Deploy
     task:
@@ -25,4 +26,5 @@ blocks:
           commands:
             - echo 'Deploying app on server...'
             - chmod 0600 ../id_rsa.pub
-            - ssh -i ~/id_rsa.pub -o StrictHostKeyChecking=no ubuntu@109.237.25.250 'cd ~/apps/catena/web;docker build -t catena_web .;./run.sh'
+            - cp ~/id_rsa.pub ~/.ssh
+            - ssh -o StrictHostKeyChecking=no ubuntu@109.237.25.250 'cd ~/apps/catena/web;docker build -t catena_web .;./run.sh'
