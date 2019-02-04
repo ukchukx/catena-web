@@ -22,9 +22,7 @@ Vue.component('v-date-picker', DatePicker);
 Vue.use(VueFlashMessage, { createShortcuts: false });
 
 window.axios = axios;
-const devAPI = 'http://127.0.0.1:3333/api/v1';
-const prodAPI = ''; // TODO: Configure prod api
-axios.defaults.baseURL = process.env.NODE_ENV !== 'production' ? devAPI : prodAPI;
+axios.defaults.baseURL = `${process.env.API_HOST}/api/v1`;
 axios.interceptors.request.use((config) => {
   config.headers.Authorization = `Bearer ${store.getters.token}`;
   return config;
