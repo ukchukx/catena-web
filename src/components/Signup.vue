@@ -9,6 +9,11 @@
           </b-col>
         </b-row>
         <b-row class="mt-4">
+          <b-col sm="8" class="text-center mx-auto">
+            <flash-message/>
+          </b-col>
+        </b-row>
+        <b-row class="mt-4">
           <b-col sm="12" md="6" offset-md="3">
             <b-form @submit.stop.prevent="register()">
               <b-form-group label="Email address:" label-for="loginEmail">
@@ -46,17 +51,20 @@
 
 <script>
 import { mapActions } from 'vuex';
+import Flash from '@/mixins/Flash';
 
 export default {
   name: 'Signup',
+  mixins: [Flash],
   data() {
     return {
       signupForm: {
-        password: 'password',
-        email: 'test@email.com'
+        password: '',
+        email: ''
       },
       loginPath: { name: 'Login' },
-      profilePath: { name: 'Profile' }
+      profilePath: { name: 'Tasks' },
+      busy: false
     };
   },
   computed: {
@@ -68,16 +76,22 @@ export default {
   methods: {
     ...mapActions(['signup']),
     register() {
+      if (this.busy) return;
+      this.busy = true;
+
       this.signup(this.signupForm)
         .then((success) => {
-          console.log(success);
+          this.busy = false;
           if (!success) {
-            alert('Could not sign up');
+            this.showFlash('Could not sign up', 'error');
           } else {
             this.$router.replace(this.profilePath);
           }
         })
-        .catch(({ message = 'Could not sign up' }) => alert(message));
+        .catch(({ message = 'Could not sign up' }) => {
+          this.busy = false;
+          this.showFlash(message, 'error');
+        });
     }
   }
 };

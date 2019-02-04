@@ -5,9 +5,21 @@ agent:
     type: e1-standard-2
     os_image: ubuntu1804
 blocks:
-  - name: Deploy
+  - name: Transfer
     task:
+      secrets:
+        - name: ssh-key
       jobs:
         - name: deploy
           commands:
             - echo 'Deploying to production...'
+            - scp dist/* {run,stop}.sh Dockerfile .dockerignore docker-compose.yml ubuntu@109.237.25.250:~/apps/catena/web/
+
+  - name: Deploy
+    task:
+      secrets:
+        - name: ssh-key
+      jobs:
+        - name: deploy
+          commands:
+            - ssh ubuntu@109.237.25.250 'cd ~/apps/catena/web;docker build -t catena_web .;./run.sh'

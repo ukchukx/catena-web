@@ -1,0 +1,150 @@
+<template>
+  <!-- eslint-disable -->
+  <div>
+    <ProfileLink/>
+    <div class="row mt-4">
+      <div class="col-sm-12 col-md-6 mx-auto">
+        <b-form @submit.stop.prevent="onSubmit()">
+          <b-form-group label="Name">
+            <b-form-input type="text" v-model="form.name" required placeholder="Task name..."></b-form-input>
+          </b-form-group>
+          <b-form-group label="Description">
+            <b-form-textarea
+              :rows="3"
+              v-model="form.description"
+              placeholder="Task description (optional)"
+            ></b-form-textarea>
+          </b-form-group>
+          <b-form-group>
+            <b-form-radio-group v-model="selectedType" :options="typeOptions"/>
+          </b-form-group>
+          <b-form-group v-if="isDaily">
+            <b-form-checkbox-group v-model="selectedDays" :options="dayOptions"/>
+          </b-form-group>
+          <b-form-group v-if="isMonthly" label="Choose day (1-28)">
+            <b-form-input :min="1" :max="28" v-model.number="selectedDate" type="number"/>
+          </b-form-group>
+          <b-form-group>
+            <v-date-picker
+              mode="single"
+              :min-date="new Date()"
+              :max-date="endOfYear"
+              v-model="selectedEndDate"
+            />
+          </b-form-group>
+
+          <b-button :disabled="!formOk" type="submit" variant="primary">Create</b-button>
+        </b-form>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { mapActions, mapGetters } from 'vuex';
+import Flash from '@/mixins/Flash';
+import ProfileLink from '@/components/ProfileLink';
+import dateGenerator from '@/utils/dateGenerator';
+
+export default {
+  name: 'CreateTask',
+  components: {
+    ProfileLink
+  },
+  mixins: [Flash],
+  data() {
+    const selectedEndDate = new Date();
+    selectedEndDate.setMonth(11);
+    selectedEndDate.setDate(31);
+    const endOfYear = new Date(
+      selectedEndDate.getFullYear(),
+      selectedEndDate.getMonth(),
+      selectedEndDate.getDate()
+    );
+
+    return {
+      form: {
+        name: '',
+        description: '',
+        schedules: []
+      },
+      endOfYear,
+      selectedEndDate,
+      selectedType: 'daily',
+      selectedDate: 1,
+      typeOptions: [
+        { text: 'Daily', value: 'daily' },
+        { text: 'Monthly', value: 'monthly' }
+      ],
+      selectedDays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      dayOptions: [
+        { text: 'Monday', value: 'Mon' },
+        { text: 'Tuesday', value: 'Tue' },
+        { text: 'Wednesday', value: 'Wed' },
+        { text: 'Thursday', value: 'Thu' },
+        { text: 'Friday', value: 'Fri' },
+        { text: 'Saturday', value: 'Sat' },
+        { text: 'Sunday', value: 'Sun' }
+      ]
+    };
+  },
+  computed: {
+    ...mapGetters(['user', 'tasks']),
+    isDaily() {
+      return this.selectedType === 'daily';
+    },
+    isMonthly() {
+      return this.selectedType === 'monthly';
+    },
+    formOk() {
+      const { form: { name }, selectedDays, selectedDate } = this;
+      const basicCondition = name.length >= 3 &&
+        this.tasks.every(t => name !== t.name) &&
+        this.selectedEndDate !== null;
+
+      return this.isDaily ? (!!selectedDays.length && basicCondition) :
+        basicCondition && (selectedDate >= 1 && selectedDate <= 28);
+    }
+  },
+  methods: {
+    ...mapActions(['createTask']),
+    onSubmit() {
+      if (this.busy) {
+        this.showFlash('Busy...', 'info', { timeout: 1000 });
+        return;
+      }
+
+      this.busy = true;
+      const selectedDays = this.isDaily ? [...this.selectedDays] : [];
+      let schedules = [...dateGenerator({ selectedDays, end: this.selectedEndDate })];
+
+      if (this.isMonthly) { // Filter out the unneeded dates
+        schedules = schedules.filter(date => date.getDate() === this.selectedDate);
+      }
+
+      this.form.schedules = schedules.map(date => ({ due_date: date.toISOString() }));
+
+      if (!this.form.schedules.length) {
+        this.busy = false;
+        this.showFlash('No schedules can be created from your selection', 'warning');
+        return;
+      }
+
+      this.createTask(this.form)
+        .then(({ success, message }) => {
+          this.busy = false;
+          if (success) {
+            this.showFlash(message, 'success');
+            this.$router.push({ name: 'Tasks' });
+            return;
+          }
+          this.showFlash(message, 'warning');
+        })
+        .catch(({ message }) => {
+          this.busy = false;
+          this.showFlash(message, 'warning');
+        });
+    }
+  }
+};
+</script>

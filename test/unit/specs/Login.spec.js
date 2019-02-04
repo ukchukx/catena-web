@@ -10,6 +10,7 @@ describe('Login', () => {
     const localVue = createLocalVue();
     localVue.use(BootstrapVue);
     const wrapper = mount(Login, { localVue, stubs: { RouterLink: RouterLinkStub } });
+    wrapper.setData({ loginForm: { email: '', password: '' } });
 
     expect(wrapper.vm.formOk).toBeFalsy();
 
@@ -24,6 +25,7 @@ describe('Login', () => {
     const localVue = createLocalVue();
     localVue.use(BootstrapVue);
     const wrapper = mount(Login, { localVue, stubs: { RouterLink: RouterLinkStub } });
+    wrapper.setData({ loginForm: { email: '', password: '' } });
     const submitButton = wrapper.vm.$el.querySelector('button[type="submit"]');
 
     expect(submitButton.disabled).toBeTruthy();

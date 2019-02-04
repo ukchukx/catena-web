@@ -9,6 +9,7 @@ describe('Signup', () => {
     const localVue = createLocalVue();
     localVue.use(BootstrapVue);
     const wrapper = mount(Signup, { localVue, stubs: { RouterLink: RouterLinkStub } });
+    wrapper.setData({ signupForm: { email: '', password: '' } });
 
     expect(wrapper.vm.formOk).toBeFalsy();
 
@@ -23,6 +24,8 @@ describe('Signup', () => {
     const localVue = createLocalVue();
     localVue.use(BootstrapVue);
     const wrapper = mount(Signup, { localVue, stubs: { RouterLink: RouterLinkStub } });
+    wrapper.setData({ signupForm: { email: '', password: '' } });
+
     const submitButton = wrapper.vm.$el.querySelector('button[type="submit"]');
 
     expect(submitButton.disabled).toBeTruthy();

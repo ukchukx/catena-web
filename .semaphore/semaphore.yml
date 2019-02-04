@@ -1,11 +1,21 @@
 version: v1.0
-name: Catena web pipeline
+name: Catena web
 agent:
   machine:
     type: e1-standard-2
     os_image: ubuntu1804
+execution_time_limit:
+  minutes: 30
 
 blocks:
+  - name: Check master
+    task:
+      jobs:
+        - name: check master
+          commands:
+            - if [ "$SEMAPHORE_GIT_BRANCH" != "master" ]; then false; fi
+            - echo 'Master branch received'
+
   - name: Install dependencies
     task:
       jobs:
@@ -26,16 +36,30 @@ blocks:
           - checkout
           - cache restore node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json),node-modules-$SEMAPHORE_GIT_BRANCH,node-modules-master
       jobs:
-        - name: npm test
+        - name: run tests
           commands:
-            - npm test
-promotions:
-  - name: Deploy to staging
-  pipeline_file: staging-deploy.yml
-  auto_promote_on:
-    - result: passed
-      branch:
-        - develop
+            - npm run test
+        - name: lint
+          commands:
+            - npm run lint
 
-  - name: Deploy to production
-  pipeline_file: production-deploy.yml
+  - name: Build
+    task:
+      env_vars:
+        - name: NODE_ENV
+          value: production
+      prologue:
+        commands:
+          - checkout
+          - cache restore node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json),node-modules-$SEMAPHORE_GIT_BRANCH,node-modules-master
+      jobs:
+        - name: build
+          commands:
+            - npm run build
+promotions:
+  - name: Deploy
+    pipeline_file: production-deploy.yml
+    auto_promote_on:
+      - result: passed
+        branch:
+          - master

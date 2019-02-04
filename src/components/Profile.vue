@@ -1,5 +1,11 @@
 <template>
+  <!-- eslint-disable -->
   <div class="container-fluid">
+    <div class="row mt-4">
+      <div class="col-sm-10 mx-auto">
+        <flash-message/>
+      </div>
+    </div>
     <div class="row mt-4">
       <div class="col-sm-12 col-md-3">
         <div class="card">
@@ -41,6 +47,13 @@
           </div>
         </div>
       </div>
+      <div class="col-sm-12 col-md-9">
+        <div class="card">
+          <div class="card-body">
+            <router-view/>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -48,12 +61,14 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import PasswordInput from '@/components/PasswordInput';
+import Flash from '@/mixins/Flash';
 
 export default {
   name: 'Profile',
   components: {
     PasswordInput
   },
+  mixins: [Flash],
   data() {
     return {
       updateForm: {
@@ -63,7 +78,8 @@ export default {
         password: '',
         new_password: ''
       },
-      loginPath: { name: 'Login' }
+      loginPath: { name: 'Login' },
+      busy: false
     };
   },
   computed: {
@@ -80,34 +96,49 @@ export default {
   },
   created() {
     this.updateForm.username = this.user.username || this.user.email;
+    this.fetchTasks();
   },
   methods: {
-    ...mapActions(['changePassword', 'updateProfile', 'deleteUser']),
+    ...mapActions(['changePassword', 'updateProfile', 'deleteUser', 'fetchTasks']),
     handlePasswordForm() {
+      if (this.busy) return;
+      this.busy = true;
+
       this.changePassword(this.passwordForm)
         .then(({ success, message = 'Password changed' }) => {
+          this.busy = false;
           if (success) {
-            alert(message);
+            this.showFlash(message, 'info');
             this.passwordForm.password = '';
             this.passwordForm.new_password = '';
             this.$refs.pass.clear();
             this.$refs.newPass.clear();
             return;
           }
-          alert(message);
+          this.showFlash(message, 'warning');
         })
-        .catch(({ message = 'Could not change password' }) => alert(message));
+        .catch(({ message = 'Could not change password' }) => {
+          this.busy = false;
+          this.showFlash(message, 'warning');
+        });
     },
     handleUpdateForm() {
+      if (this.busy) return;
+      this.busy = true;
+
       this.updateProfile(this.updateForm)
-      .then((success) => {
-        if (success) {
-          alert('Username updated');
-          return;
-        }
-        alert('Could not update username');
-      })
-        .catch(({ message = 'Could not update username' }) => alert(message));
+        .then(({ success, message }) => {
+          this.busy = false;
+          if (success) {
+            this.showFlash('Username updated', 'success');
+            return;
+          }
+          this.showFlash(message, 'warning');
+        })
+        .catch(({ message = 'Could not update username' }) => {
+          this.busy = false;
+          this.showFlash(message, 'warning');
+        });
     },
     logout() {
       this.deleteUser();
