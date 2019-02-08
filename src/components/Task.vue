@@ -81,8 +81,7 @@ export default {
     ...mapGetters(['tasks']),
     formOk() {
       const { form: { name, description } } = this;
-      return (name.trim().length >= 3 && !this.tasks.some(t => name.trim() === t.name)) ||
-        description.trim() !== this.task.description;
+      return name.trim().length >= 3 || description.trim() !== this.task.description;
     },
     taskRoute() {
       return { name: 'TaskReport', params: { id: this.task.id } };

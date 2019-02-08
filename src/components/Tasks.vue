@@ -6,7 +6,8 @@
     </div>
     <div class="col-sm-12">
       <ul class="list-group">
-        <Task :task="task" v-for="task in tasks" :key="task.id"/>
+        <Task :task="task" v-for="task in dueTasks" :key="task.id"/>
+        <Task :task="task" v-for="task in notDueTasks" :key="task.id"/>
       </ul>
     </div>
   </div>
@@ -27,7 +28,23 @@ export default {
   },
   mixins: [Flash],
   computed: {
-    ...mapGetters(['tasks'])
+    ...mapGetters(['tasks']),
+    dueTasks() {
+      const today = new Date();
+      today.setUTCHours(12, 0, 0, 0);
+
+      return this.tasks.filter(({ schedules }) => schedules
+        .some(({ due_date }) => {
+          const dueDate = new Date(due_date);
+          return today.getFullYear() === dueDate.getFullYear() &&
+            today.getMonth() === dueDate.getMonth() &&
+            today.getDate() === dueDate.getDate();
+        })
+      );
+    },
+    notDueTasks() {
+      return this.tasks.filter(({ id }) => this.dueTasks.every(task => task.id !== id));
+    }
   },
   methods: {
     createNewTask() {
