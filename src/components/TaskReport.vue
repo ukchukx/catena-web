@@ -43,11 +43,16 @@ export default {
     },
     currentStreak() {
       const result = [];
+      const today = new Date();
+      today.setUTCHours(0, 0, 0, 0);
       /* eslint-disable no-plusplus */
       for (let d = this.streakable.length - 1; d >= 0; --d) {
+        const date = new Date(this.streakable[d].due_date);
+        date.setUTCHours(0, 0, 0, 0);
+
         if (this.streakable[d].done) {
           result.push(this.streakable[d]);
-        } else {
+        } else if (+today !== +date) {
           break;
         }
       }
@@ -69,23 +74,29 @@ export default {
       return !streaks.length ? 0 : Math.max(...streaks.map(streak => streak.length));
     },
     streakable() {
+      const today = new Date();
+      today.setUTCHours(0, 0, 0, 0);
+
       return this.task.schedules
         .filter(({ due_date, done }) => {
           const date = new Date(due_date);
           date.setUTCHours(0, 0, 0, 0);
 
-          const isToday = +this.today === +date && !done;
+          const isToday = +today === +date && !done;
 
-          return isToday || this.today >= date;
+          return isToday || today >= date;
         });
     },
     events() {
+      const today = new Date();
+      today.setUTCHours(0, 0, 0, 0);
+
       return this.task.schedules
         .map((schedule) => {
           const date = new Date(schedule.due_date);
           date.setUTCHours(0, 0, 0, 0);
 
-          const isToday = +this.today === +date && !schedule.done;
+          const isToday = +today === +date && !schedule.done;
 
           let highlight;
           let dot;
@@ -101,7 +112,7 @@ export default {
               borderColor: '#333333',
               borderWidth: '2px'
             };
-          } else if (this.today <= date) { // upcoming
+          } else if (today <= date) { // upcoming
             highlight = {
               backgroundColor: '#D3D3D3',
               borderColor: '#8B8C8B',
