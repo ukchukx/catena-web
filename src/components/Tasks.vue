@@ -6,8 +6,7 @@
     </div>
     <div class="col-sm-12">
       <ul class="list-group">
-        <Task :task="task" v-for="task in dueTasks" :key="task.id"/>
-        <Task :task="task" v-for="task in notDueTasks" :key="task.id"/>
+        <Task :task="task" v-for="task in sortedTasks" :key="task.id"/>
       </ul>
     </div>
   </div>
@@ -34,16 +33,20 @@ export default {
       today.setUTCHours(12, 0, 0, 0);
 
       return this.tasks.filter(({ schedules }) => schedules
-        .some(({ due_date }) => {
+        .some(({ due_date, done }) => {
           const dueDate = new Date(due_date);
           return today.getFullYear() === dueDate.getFullYear() &&
             today.getMonth() === dueDate.getMonth() &&
-            today.getDate() === dueDate.getDate();
+            today.getDate() === dueDate.getDate() &&
+            !done;
         })
       );
     },
-    notDueTasks() {
+    otherTasks() {
       return this.tasks.filter(({ id }) => this.dueTasks.every(task => task.id !== id));
+    },
+    sortedTasks() {
+      return [...this.dueTasks, ...this.otherTasks];
     }
   },
   methods: {
