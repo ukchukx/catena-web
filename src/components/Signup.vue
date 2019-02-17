@@ -5,7 +5,7 @@
       <b-col md="6" sm="12">
         <b-row class="mt-4">
           <b-col sm="12" class="text-center">
-            <h3 class="logo font-weight-bold">Catena</h3>
+            <form-logo />
           </b-col>
         </b-row>
         <b-row class="mt-4">
@@ -13,7 +13,7 @@
             <flash-message/>
           </b-col>
         </b-row>
-        <b-row class="mt-4">
+        <b-row class="mt-4 px-4">
           <b-col sm="12" md="6" offset-md="3">
             <b-form @submit.stop.prevent="register()">
               <b-form-group label="Email address:" label-for="loginEmail">
@@ -51,10 +51,14 @@
 
 <script>
 import { mapActions } from 'vuex';
+import FormLogo from '@/components/FormLogo';
 import Flash from '@/mixins/Flash';
 
 export default {
   name: 'Signup',
+  components: {
+    FormLogo
+  },
   mixins: [Flash],
   data() {
     return {

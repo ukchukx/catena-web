@@ -4,6 +4,8 @@ import store from '@/store';
 
 const Login = () => import('@/components/Login');
 const Signup = () => import('@/components/Signup');
+const Forgot = () => import('@/components/Forgot');
+const Reset = () => import('@/components/Reset');
 const Profile = () => import(/* webpackChunkName: "group-profile" */ '@/components/Profile');
 const Tasks = () => import(/* webpackChunkName: "group-profile" */ '@/components/Tasks');
 const CreateTask = () => import('@/components/CreateTask');
@@ -26,6 +28,24 @@ const router = new VueRouter({
       path: '/app/signup',
       name: 'Signup',
       component: Signup,
+      meta: {
+        requiresAuth: false,
+        authRoute: true
+      }
+    },
+    {
+      path: '/app/forgot',
+      name: 'Forgot',
+      component: Forgot,
+      meta: {
+        requiresAuth: false,
+        authRoute: true
+      }
+    },
+    {
+      path: '/app/reset',
+      name: 'Reset',
+      component: Reset,
       meta: {
         requiresAuth: false,
         authRoute: true

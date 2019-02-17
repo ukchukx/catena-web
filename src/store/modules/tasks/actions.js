@@ -65,6 +65,26 @@ export function authenticate({ commit }, payload) {
     .catch(({ response: { data } }) => Promise.reject(data));
 }
 
+export function forgotPassword(store, payload) {
+  return axios
+    .post('/forgot', payload)
+    .then(({ data }) => data)
+    .catch(({ response: { data } }) => data);
+}
+
+export function resetPassword({ commit }, payload) {
+  return axios
+    .post('/reset', payload)
+    .then(({ data: { success, data, token: { token } } }) => {
+      if (success) {
+        commit(SAVE_USER, data);
+        commit(SAVE_TOKEN, token);
+      }
+      return success;
+    })
+    .catch(({ response: { data } }) => Promise.reject(data));
+}
+
 export function deleteUser({ commit }) {
   commit(SAVE_USER, {});
   commit(SAVE_TOKEN, '');

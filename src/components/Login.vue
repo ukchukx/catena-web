@@ -5,7 +5,7 @@
       <b-col md="6" sm="12">
         <b-row class="mt-4">
           <b-col sm="12" class="text-center">
-            <h3 class="logo font-weight-bold">Catena</h3>
+            <form-logo />
           </b-col>
         </b-row>
         <b-row class="mt-4">
@@ -13,7 +13,7 @@
             <flash-message/>
           </b-col>
         </b-row>
-        <b-row class="mt-4">
+        <b-row class="mt-4 px-4">
           <b-col sm="12" md="6" offset-md="3">
             <b-form @submit.stop.prevent="login()">
               <b-form-group label="Email address:" label-for="loginEmail">
@@ -40,6 +40,9 @@
           <b-col sm="12" class="mt-3 text-center">
             <router-link :to="signupPath">Signup</router-link>
           </b-col>
+          <b-col sm="12" class="mt-3 text-center">
+            <router-link :to="forgotPath">Forgot password</router-link>
+          </b-col>
         </b-row>
       </b-col>
       <b-col md="6" class="d-none d-md-block">
@@ -51,10 +54,14 @@
 
 <script>
 import { mapActions } from 'vuex';
+import FormLogo from '@/components/FormLogo';
 import Flash from '@/mixins/Flash';
 
 export default {
   name: 'Login',
+  components: {
+    FormLogo
+  },
   mixins: [Flash],
   data() {
     return {
@@ -63,6 +70,7 @@ export default {
         email: ''
       },
       signupPath: { name: 'Signup' },
+      forgotPath: { name: 'Forgot' },
       profilePath: { name: 'Tasks' },
       busy: false
     };

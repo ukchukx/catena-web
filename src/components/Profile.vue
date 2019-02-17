@@ -108,7 +108,7 @@ export default {
         .then(({ success, message = 'Password changed' }) => {
           this.busy = false;
           if (success) {
-            this.showFlash(message, 'info');
+            this.showFlash(message, 'success');
             this.passwordForm.password = '';
             this.passwordForm.new_password = '';
             this.$refs.pass.clear();
