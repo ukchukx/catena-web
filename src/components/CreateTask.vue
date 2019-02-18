@@ -24,12 +24,16 @@
           <b-form-group v-if="isMonthly" label="Choose day (1-28)">
             <b-form-input :min="1" :max="28" v-model.number="selectedDate" type="number"/>
           </b-form-group>
-          <b-form-group>
+          <b-form-group label="Start date - end date">
+            <p class="text-muted">{{ dateRange.start | date('Do MMMM, YYYY') }} to {{ dateRange.end | date('Do MMMM, YYYY') }}</p>
             <v-date-picker
-              mode="single"
+              mode="range"
+              is-inline
+              :show-day-popover="false"
+              is-expanded
               :min-date="new Date()"
               :max-date="endOfYear"
-              v-model="selectedEndDate"
+              v-model="dateRange"
             />
           </b-form-group>
 
@@ -43,6 +47,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import Flash from '@/mixins/Flash';
+import Filters from '@/mixins/Filters';
 import ProfileLink from '@/components/ProfileLink';
 import dateGenerator from '@/utils/dateGenerator';
 
@@ -51,16 +56,12 @@ export default {
   components: {
     ProfileLink
   },
-  mixins: [Flash],
+  mixins: [Flash, Filters],
   data() {
-    const selectedEndDate = new Date();
-    selectedEndDate.setMonth(11);
-    selectedEndDate.setDate(31);
-    const endOfYear = new Date(
-      selectedEndDate.getFullYear(),
-      selectedEndDate.getMonth(),
-      selectedEndDate.getDate()
-    );
+    const endDate = new Date();
+    endDate.setMonth(11);
+    endDate.setDate(31);
+    const endOfYear = new Date(endDate);
 
     return {
       form: {
@@ -69,7 +70,10 @@ export default {
         schedules: []
       },
       endOfYear,
-      selectedEndDate,
+      dateRange: {
+        start: new Date(),
+        end: endDate
+      },
       selectedType: 'daily',
       selectedDate: 1,
       typeOptions: [
@@ -97,11 +101,10 @@ export default {
       return this.selectedType === 'monthly';
     },
     formOk() {
-      const { form: { name }, selectedDays, selectedDate } = this;
-      const basicCondition = name.length >= 3 &&
-        this.selectedEndDate !== null;
+      const { isDaily, form: { name }, selectedDays, selectedDate, dateRange: { end } } = this;
+      const basicCondition = name.length >= 3 && end !== null;
 
-      return this.isDaily ? (!!selectedDays.length && basicCondition) :
+      return isDaily ? (!!selectedDays.length && basicCondition) :
         basicCondition && (selectedDate >= 1 && selectedDate <= 28);
     }
   },
@@ -115,7 +118,7 @@ export default {
 
       this.busy = true;
       const selectedDays = this.isDaily ? [...this.selectedDays] : [];
-      let schedules = [...dateGenerator({ selectedDays, end: this.selectedEndDate })];
+      let schedules = [...dateGenerator(Object.assign({ selectedDays }, this.dateRange))];
 
       if (this.isMonthly) { // Filter out the unneeded dates
         schedules = schedules.filter(date => date.getDate() === this.selectedDate);

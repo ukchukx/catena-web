@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "moment-mini": "^2.22.1",
     "v-calendar": "^0.9.7",
     "vue": "^2.5.2",
     "vue-flash-message": "^0.7.2",
