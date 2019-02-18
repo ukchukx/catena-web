@@ -4,7 +4,7 @@
     <div class="row">
       <div class="col-md-9 col-sm-12">
         <h5>
-          <router-link :to="taskRoute">{{ task.name }}</router-link>
+          <router-link :class="nameClasses" :to="taskRoute">{{ task.name }}</router-link>
         </h5>
       </div>
       <div class="col-md-3 col-sm-12 text-right">
@@ -83,6 +83,9 @@ export default {
     formOk() {
       const { form: { name, description } } = this;
       return name.trim().length >= 3 || description.trim() !== this.task.description;
+    },
+    nameClasses() {
+      return this.canMark ? '' : 'text-muted';
     },
     taskRoute() {
       return { name: 'TaskReport', params: { id: this.task.id } };
