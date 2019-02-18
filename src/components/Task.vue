@@ -8,15 +8,16 @@
         </h5>
       </div>
       <div class="col-md-3 col-sm-12 text-right">
-        <button class="btn btn-sm btn-outline-info" @click.stop.prevent="toggleForm()">
+        <button class="btn btn-sm btn-outline-secondary" @click.stop.prevent="toggleForm()">
           Edit
-          <i class="fa fa-chevron-down"></i>
         </button>
         <button
           v-if="canMark"
-          class="btn btn-sm btn-outline-info"
+          class="btn btn-sm btn-outline-primary"
           @click.stop.prevent="toggleScheduleForm()"
-        >I've done this today</button>
+        >
+          <i class="fa fa-check"></i> Done
+        </button>
         <button class="btn btn-sm btn-outline-danger" @click.stop.prevent="doDelete()">Delete</button>
       </div>
     </div>
