@@ -2,7 +2,10 @@
   <!-- eslint-disable -->
   <div class="row" v-if="tasks.length">
     <div class="col-sm-12">
-      <button class="btn btn-primary mb-3" @click.stop.prevent="createNewTask()">&plus; Add task</button>
+      <button
+        class="btn btn-outline-primary mb-3"
+        @click.stop.prevent="createNewTask()"
+      >&plus; Add task</button>
     </div>
     <div class="col-sm-12">
       <ul class="list-group">

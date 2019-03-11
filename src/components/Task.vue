@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable -->
-  <li class="list-group-item mt-1 mb-1">
+  <li class="list-group-item">
     <div class="row">
       <div class="col-md-9 col-sm-12">
         <h5>
