@@ -13,6 +13,10 @@
           <span class="h2">Longest streak</span>
           <span class="streak font-weight-bold">{{ longestStreak }}</span>
         </p>
+        <p class="sub-text text-muted">
+          <span class="h2">Performance</span>
+          <span class="streak font-weight-bold">{{ performance }}</span>
+        </p>
       </div>
       <div class="col-sm-12 col-md-8">
         <v-calendar :is-expanded="true" :attributes="events"/>
@@ -40,6 +44,11 @@ export default {
       const today = new Date();
       today.setUTCHours(0, 0, 0, 0);
       return today;
+    },
+    performance() {
+      const completed = this.streakable.filter(({ done }) => done).length;
+      const percent = +((completed * 100) / this.streakable.length).toFixed(2);
+      return `${percent}%`;
     },
     currentStreak() {
       const result = [];
