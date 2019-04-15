@@ -2,7 +2,7 @@
   <!-- eslint-disable -->
   <b-container fluid class="pl-0 pr-0">
     <b-row>
-      <b-col md="6" sm="12">
+      <b-col md="6" sm="12" offset-md="3">
         <b-row class="mt-4">
           <b-col sm="12" class="text-center">
             <form-logo />
@@ -44,9 +44,6 @@
             <router-link :to="forgotPath">Forgot password</router-link>
           </b-col>
         </b-row>
-      </b-col>
-      <b-col md="6" class="d-none d-md-block">
-        <img width="100%" src="/static/images/racestart.jpg" block fluid>
       </b-col>
     </b-row>
   </b-container>
