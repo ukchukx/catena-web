@@ -90,8 +90,8 @@ export default {
         });
     }
   },
-  created() {
-    if (this.todaySchedule) this.scheduleForm.id = this.todaySchedule.id;
+  mounted() {
+    if (this.todaySchedule && this.todaySchedule) this.scheduleForm.id = this.todaySchedule.id;
   },
   methods: {
     ...mapActions(['deleteTask', 'updateTask', 'markTaskAsDone', 'updateSchedule']),
