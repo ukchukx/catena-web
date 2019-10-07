@@ -24,6 +24,16 @@
           <b-form-group v-if="isMonthly" label="Choose day (1-28)">
             <b-form-input :min="1" :max="28" v-model.number="selectedDate" type="number"/>
           </b-form-group>
+          <b-form-group label="Start time - end time">
+            <div class="row">
+              <div class="col">
+                <flat-pickr :config="startTimeConfig" v-model="startTime" class="form-control" />
+              </div>
+              <div class="col">
+                <flat-pickr :config="endTimeConfig" v-model="endTime" class="form-control" />
+              </div>
+            </div>
+          </b-form-group>
           <b-form-group label="Start date - end date">
             <p class="text-muted">{{ dateRange.start | date('Do MMMM, YYYY') }} to {{ dateRange.end | date('Do MMMM, YYYY') }}</p>
             <v-date-picker
@@ -46,6 +56,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import flatPickr from 'vue-flatpickr-component';
 import Flash from '@/mixins/Flash';
 import Filters from '@/mixins/Filters';
 import ProfileLink from '@/components/ProfileLink';
@@ -54,7 +65,8 @@ import dateGenerator from '@/utils/dateGenerator';
 export default {
   name: 'CreateTask',
   components: {
-    ProfileLink
+    ProfileLink,
+    flatPickr
   },
   mixins: [Flash, Filters],
   data() {
@@ -89,7 +101,25 @@ export default {
         { text: 'Friday', value: 'Fri' },
         { text: 'Saturday', value: 'Sat' },
         { text: 'Sunday', value: 'Sun' }
-      ]
+      ],
+      startTimeConfig: {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: 'H:i',
+        minDate: '00:00',
+        maxDate: '23:59',
+        time_24hr: true
+      },
+      endTimeConfig: {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: 'H:i',
+        minDate: '00:00',
+        maxDate: '23:59',
+        time_24hr: true
+      },
+      startTime: '00:00',
+      endTime: '23:59'
     };
   },
   computed: {
@@ -108,6 +138,14 @@ export default {
         basicCondition && (selectedDate >= 1 && selectedDate <= 28);
     }
   },
+  watch: {
+    startTime(_) {
+      this.endTimeConfig.minDate = this.startTime;
+    },
+    endTime(_) {
+      this.startTimeConfig.maxDate = this.endTime;
+    }
+  },
   methods: {
     ...mapActions(['createTask']),
     onSubmit() {
@@ -124,7 +162,8 @@ export default {
         schedules = schedules.filter(date => date.getDate() === this.selectedDate);
       }
 
-      this.form.schedules = schedules.map(date => ({ due_date: date.toISOString() }));
+      this.form.schedules = schedules
+        .map(date => ({ due_date: date.toISOString(), from: this.startTime, to: this.endTime }));
 
       if (!this.form.schedules.length) {
         this.busy = false;

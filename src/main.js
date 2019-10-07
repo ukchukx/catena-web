@@ -9,6 +9,7 @@ import 'bootstrap/dist/css/bootstrap.css'; // eslint-disable-line import/no-extr
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import 'vue-flash-message/dist/vue-flash-message.min.css';
 import 'v-calendar/lib/v-calendar.min.css';
+import 'flatpickr/dist/flatpickr.css'; // eslint-disable-line import/no-extraneous-dependencies
 import App from './App';
 import router from './router';
 import store from './store';

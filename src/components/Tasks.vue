@@ -12,7 +12,7 @@
       <b-tabs content>
         <b-tab title="Due tasks">
           <ul v-if="hasDueTasks" class="list-group mt-3">
-            <Task :task="task" v-for="task in dueTasks" :key="task.id"/>
+            <Task :now="now" :task="task" v-for="task in dueTasks" :key="task.id"/>
           </ul>
           <div v-else class="row mt-5 mb-5">
             <div class="col-sm-12 text-center">
@@ -24,7 +24,7 @@
 
         <b-tab title="Other tasks">
           <ul class="list-group mt-3">
-            <Task :task="task" v-for="task in otherTasks" :key="task.id"/>
+            <Task :now="now" :task="task" v-for="task in otherTasks" :key="task.id"/>
           </ul>
         </b-tab>
 
@@ -48,32 +48,43 @@ export default {
     Task
   },
   mixins: [Flash],
+  data() {
+    return {
+      now: Date.now()
+    };
+  },
   computed: {
     ...mapGetters(['tasks']),
     dueTasks() {
-      const today = new Date();
-      today.setUTCHours(12, 0, 0, 0);
-
       return this.tasks.filter(({ schedules }) => schedules
-        .some(({ due_date, done }) => {
-          const dueDate = new Date(due_date);
-          return today.getFullYear() === dueDate.getFullYear() &&
-            today.getMonth() === dueDate.getMonth() &&
-            today.getDate() === dueDate.getDate() &&
+        .some(({ due_date, done, from, to }) => {
+          const [date] = due_date.split('T');
+
+          return new Date(`${date} ${from}`).getTime() <= this.now && 
+            this.now <= new Date(`${date} ${to}`).getTime() && 
             !done;
         })
       );
     },
     otherTasks() {
-      return this.tasks.filter(({ id }) => this.dueTasks.every(task => task.id !== id));
+      const dueTasks = this.dueTasks.map(({ id }) => id);
+
+      return this.tasks.filter(({ id }) => !dueTasks.includes(id));
     },
     hasDueTasks() {
       return !!this.dueTasks.length;
     }
   },
+  mounted() {
+    setTimeout(this.updateNow, 300000);
+  },
   methods: {
     createNewTask() {
       this.$router.push({ name: 'CreateTask' });
+    },
+    updateNow() {
+      this.now = Date.now();
+      setTimeout(this.updateNow, 300000);
     }
   }
 };

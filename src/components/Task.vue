@@ -51,6 +51,10 @@ export default {
     task: {
       required: true,
       type: Object
+    },
+    now: {
+      required: true,
+      type: Number
     }
   },
   data() {
@@ -80,15 +84,13 @@ export default {
       return !!this.todaySchedule && !this.todaySchedule.done;
     },
     todaySchedule() {
-      const today = new Date();
-      today.setUTCHours(12, 0, 0, 0);
-
       return this.task.schedules
-        .find(({ due_date }) => {
-          const dueDate = new Date(due_date);
-          return today.getFullYear() === dueDate.getFullYear() &&
-            today.getMonth() === dueDate.getMonth() &&
-            today.getDate() === dueDate.getDate();
+        .find(({ due_date, from, to, done }) => {
+          const [date] = due_date.split('T');
+
+          return new Date(`${date} ${from}`).getTime() <= this.now && 
+            this.now <= new Date(`${date} ${to}`).getTime() && 
+            !done;
         });
     }
   },
