@@ -7,10 +7,29 @@
         @click.stop.prevent="createNewTask()"
       >&plus; Add task</button>
     </div>
+
     <div class="col-sm-12">
-      <ul class="list-group">
-        <Task :task="task" v-for="task in sortedTasks" :key="task.id"/>
-      </ul>
+      <b-tabs content>
+        <b-tab title="Due tasks">
+          <ul v-if="hasDueTasks" class="list-group mt-3">
+            <Task :task="task" v-for="task in dueTasks" :key="task.id"/>
+          </ul>
+          <div v-else class="row mt-5 mb-5">
+            <div class="col-sm-12 text-center">
+              <h3>Kudos</h3>
+              <h6>No due tasks</h6>
+            </div>
+          </div>
+        </b-tab>
+
+        <b-tab title="Other tasks">
+          <ul class="list-group mt-3">
+            <Task :task="task" v-for="task in otherTasks" :key="task.id"/>
+          </ul>
+        </b-tab>
+
+        <b-tab title="Archived tasks" disabled></b-tab>
+      </b-tabs>
     </div>
   </div>
   <empty-task-view v-else/>
@@ -48,8 +67,8 @@ export default {
     otherTasks() {
       return this.tasks.filter(({ id }) => this.dueTasks.every(task => task.id !== id));
     },
-    sortedTasks() {
-      return [...this.dueTasks, ...this.otherTasks];
+    hasDueTasks() {
+      return !!this.dueTasks.length;
     }
   },
   methods: {

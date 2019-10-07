@@ -8,20 +8,22 @@
         </h5>
       </div>
       <div class="col-md-3 col-sm-12 text-right">
-        <button
-          v-if="canMark"
-          class="btn btn-sm btn-outline-primary"
-          @click.stop.prevent="mark()"
-        >
-          <i class="fa fa-check"></i> Done
-        </button>
-        <button class="btn btn-sm btn-outline-secondary" @click.stop.prevent="toggleForm()">
-          Edit
-        </button>
-        <button class="btn btn-sm btn-outline-danger" @click.stop.prevent="doDelete()">Delete</button>
+        <div class="btn-group">
+          <button
+            v-if="canMark"
+            class="btn btn-sm btn-outline-primary"
+            @click.stop.prevent="mark()"
+          >
+            <i class="fa fa-check"></i> Done
+          </button>
+          <button class="btn btn-sm btn-outline-secondary" @click.stop.prevent="toggleForm()">
+            Edit
+          </button>
+          <button class="btn btn-sm btn-outline-danger" @click.stop.prevent="doDelete()">Delete</button>
+        </div>
       </div>
     </div>
-    <hr v-if="showForm || showScheduleForm">
+    <hr v-if="showForm">
     <div class="row" v-if="showForm">
       <div class="col-md-6 col-sm-12">
         <b-form @submit.stop.prevent="update()">
@@ -91,7 +93,7 @@ export default {
     }
   },
   mounted() {
-    if (this.todaySchedule && this.todaySchedule) this.scheduleForm.id = this.todaySchedule.id;
+    if (this.todaySchedule && this.todaySchedule) this.form.id = this.todaySchedule.id;
   },
   methods: {
     ...mapActions(['deleteTask', 'updateTask', 'markTaskAsDone', 'updateSchedule']),
