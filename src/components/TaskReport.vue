@@ -3,22 +3,35 @@
   <div>
     <ProfileLink/>
     <div class="row mt-4">
-      <div class="col-sm-12 col-md-4 mb-3">
+      <div class="col">
         <h1 class="task-name">{{ task.name }}</h1>
-        <p class="sub-text text-muted mt-3">
+      </div>
+    </div>
+    <div class="row mt-2">
+      <div class="col-md-4 col-sm-12">
+        <p class="sub-text text-muted text-center">
           <span class="h2">Current streak</span>
+          <br>
           <span class="streak font-weight-bold">{{ currentStreak }}</span>
         </p>
-        <p class="sub-text text-muted">
+      </div>
+      <div class="col-md-4 col-sm-12">
+        <p class="sub-text text-muted text-center">
           <span class="h2">Longest streak</span>
+          <br>
           <span class="streak font-weight-bold">{{ longestStreak }}</span>
         </p>
-        <p class="sub-text text-muted">
+      </div>
+      <div class="col-md-4 col-sm-12">
+        <p class="sub-text text-muted text-center">
           <span class="h2">Performance</span>
+          <br>
           <span class="streak font-weight-bold">{{ performance }}</span>
         </p>
       </div>
-      <div class="col-sm-12 col-md-8">
+    </div>
+    <div class="row mt-3">
+      <div class="col">
         <v-calendar :is-expanded="true" :attributes="events"/>
       </div>
     </div>
