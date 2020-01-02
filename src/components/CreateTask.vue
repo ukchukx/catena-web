@@ -8,13 +8,13 @@
           <b-form-group label="Name">
             <b-form-input type="text" v-model="form.name" required placeholder="Task name..."></b-form-input>
           </b-form-group>
-          <b-form-group label="Description">
+          <!-- <b-form-group label="Description">
             <b-form-textarea
               :rows="3"
               v-model="form.description"
               placeholder="Task description (optional)"
             ></b-form-textarea>
-          </b-form-group>
+          </b-form-group> -->
           <b-form-group>
             <b-form-radio-group v-model="selectedType" :options="typeOptions"/>
           </b-form-group>
@@ -24,7 +24,7 @@
           <b-form-group v-if="isMonthly" label="Choose day (1-28)">
             <b-form-input :min="1" :max="28" v-model.number="selectedDate" type="number"/>
           </b-form-group>
-          <b-form-group label="Start time - end time">
+          <!-- <b-form-group label="Start time - end time">
             <div class="row">
               <div class="col">
                 <flat-pickr :config="startTimeConfig" v-model="startTime" class="form-control" />
@@ -33,7 +33,7 @@
                 <flat-pickr :config="endTimeConfig" v-model="endTime" class="form-control" />
               </div>
             </div>
-          </b-form-group>
+          </b-form-group> -->
           <b-form-group label="Start date - end date">
             <p class="text-muted">{{ dateRange.start | date('Do MMMM, YYYY') }} to {{ dateRange.end | date('Do MMMM, YYYY') }}</p>
             <v-date-picker
