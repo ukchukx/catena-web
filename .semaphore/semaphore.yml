@@ -36,9 +36,9 @@ blocks:
           - checkout
           - cache restore node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum package.json),node-modules-$SEMAPHORE_GIT_BRANCH,node-modules-master
       jobs:
-        - name: test
-          commands:
-            - npm run test
+        # - name: test
+        #   commands:
+        #     - npm run test
         - name: lint
           commands:
             - npm run lint
