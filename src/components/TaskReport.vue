@@ -59,8 +59,13 @@ export default {
       return today;
     },
     performance() {
-      const completed = this.streakable.filter(({ done }) => done).length;
-      const percent = +((completed * 100) / this.streakable.length).toFixed(2);
+      let percent = 0;
+      
+      if (this.streakable.length) {
+        const completed = this.streakable.filter(({ done }) => done).length;
+        percent = +((completed * 100) / this.streakable.length).toFixed(2);
+      }
+
       return `${percent}%`;
     },
     currentStreak() {
