@@ -10,21 +10,21 @@
 
     <div class="col-sm-12">
       <b-tabs content>
-        <b-tab title="Due tasks">
+        <b-tab title="Todo">
           <ul v-if="hasDueTasks" class="list-group mt-3">
-            <Task :now="now" :task="task" v-for="task in dueTasks" :key="task.id"/>
+            <DueTask :now="now" :task="task" v-for="task in dueTasks" :key="task.id"/>
           </ul>
           <div v-else class="row mt-5 mb-5">
             <div class="col-sm-12 text-center">
               <h3>Kudos</h3>
-              <h6>No due tasks</h6>
+              <h6>Nothing to do today</h6>
             </div>
           </div>
         </b-tab>
 
-        <b-tab title="Other tasks">
+        <b-tab title="All tasks">
           <ul class="list-group mt-3">
-            <Task :now="now" :task="task" v-for="task in otherTasks" :key="task.id"/>
+            <Task :now="now" :task="task" v-for="task in tasks" :key="task.id"/>
           </ul>
         </b-tab>
 
@@ -39,11 +39,13 @@
 import { mapGetters } from 'vuex';
 import EmptyTaskView from '@/components/EmptyTaskView';
 import Task from '@/components/Task';
+import DueTask from '@/components/DueTask';
 import Flash from '@/mixins/Flash';
 
 export default {
   name: 'Tasks',
   components: {
+    DueTask,
     EmptyTaskView,
     Task
   },
@@ -65,11 +67,6 @@ export default {
             !done;
         })
       );
-    },
-    otherTasks() {
-      const dueTasks = this.dueTasks.map(({ id }) => id);
-
-      return this.tasks.filter(({ id }) => !dueTasks.includes(id));
     },
     hasDueTasks() {
       return !!this.dueTasks.length;

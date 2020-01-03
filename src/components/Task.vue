@@ -4,18 +4,11 @@
     <div class="row">
       <div class="col-md-9 col-sm-12">
         <h5>
-          <router-link :class="nameClasses" :to="taskRoute">{{ task.name }}</router-link>
+          <router-link :to="taskRoute">{{ task.name }}</router-link>
         </h5>
       </div>
       <div class="col-md-3 col-sm-12 text-right">
         <div class="btn-group">
-          <button
-            v-if="canMark"
-            class="btn btn-sm btn-outline-primary"
-            @click.stop.prevent="mark()"
-          >
-            <i class="fa fa-check"></i> Done
-          </button>
           <button class="btn btn-sm btn-outline-secondary" @click.stop.prevent="toggleForm()">
             Edit
           </button>
@@ -74,24 +67,8 @@ export default {
       const { form: { name, description } } = this;
       return name.trim().length >= 3 || description.trim() !== this.task.description;
     },
-    nameClasses() {
-      return this.canMark ? '' : 'text-muted';
-    },
     taskRoute() {
       return { name: 'TaskReport', params: { id: this.task.id } };
-    },
-    canMark() {
-      return !!this.todaySchedule && !this.todaySchedule.done;
-    },
-    todaySchedule() {
-      return this.task.schedules
-        .find(({ due_date, from, to, done }) => {
-          const [date] = due_date.split('T');
-
-          return new Date(`${date} ${from}`).getTime() <= this.now && 
-            this.now <= new Date(`${date} ${to}`).getTime() && 
-            !done;
-        });
     }
   },
   mounted() {
@@ -121,17 +98,6 @@ export default {
           this.busy = false;
           this.showFlash(message, 'warning');
         });
-    },
-    mark() {
-      this.markTaskAsDone(this.task)
-        .then((success) => {
-          if (success) {
-            this.showFlash('Done for today', 'success');
-            return;
-          }
-          this.showFlash('Could not complete task', 'warning');
-        })
-        .catch(({ message }) => this.showFlash(message, 'warning'));
     },
     update() {
       if (this.busy) return;
