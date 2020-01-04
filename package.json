@@ -15,7 +15,7 @@
   "dependencies": {
     "axios": "^0.18.1",
     "moment-mini": "^2.22.1",
-    "v-calendar": "^0.9.7",
+    "v-calendar": "^1.0.0",
     "vue": "^2.5.2",
     "vue-flash-message": "^0.7.2",
     "vue-flatpickr-component": "^8.1.3",

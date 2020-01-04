@@ -16,13 +16,21 @@
             ></b-form-textarea>
           </b-form-group> -->
           <b-form-group>
-            <b-form-radio-group v-model="selectedType" :options="typeOptions"/>
+            <b-form-radio-group v-model="selectedMode" :options="typeOptions"/>
           </b-form-group>
           <b-form-group v-if="isDaily">
             <b-form-checkbox-group v-model="selectedDays" :options="dayOptions"/>
           </b-form-group>
-          <b-form-group v-if="isMonthly" label="Choose day (1-28)">
-            <b-form-input :min="1" :max="28" v-model.number="selectedDate" type="number"/>
+          <b-form-group v-if="isCustom" label="Choose dates">
+            <v-date-picker
+              mode="multiple"
+              is-inline
+              :show-day-popover="false"
+              is-expanded
+              :min-date="new Date()"
+              :max-date="endOfYear"
+              v-model="customDates"
+            />
           </b-form-group>
           <!-- <b-form-group label="Start time - end time">
             <div class="row">
@@ -35,7 +43,9 @@
             </div>
           </b-form-group> -->
           <b-form-group label="Start date - end date">
-            <p class="text-muted">{{ dateRange.start | date('Do MMMM, YYYY') }} to {{ dateRange.end | date('Do MMMM, YYYY') }}</p>
+            <p class="text-muted">
+              <i>{{ dateRange.start | date('Do MMMM, YYYY') }} to {{ dateRange.end | date('Do MMMM, YYYY') }}</i>
+            </p>
             <v-date-picker
               mode="range"
               is-inline
@@ -76,6 +86,7 @@ export default {
     const endOfYear = new Date(endDate);
 
     return {
+      busy: false,
       form: {
         name: '',
         description: '',
@@ -86,12 +97,12 @@ export default {
         start: new Date(),
         end: endDate
       },
-      selectedType: 'daily',
-      selectedDate: 1,
+      selectedMode: 'daily',
       typeOptions: [
         { text: 'Daily', value: 'daily' },
-        { text: 'Monthly', value: 'monthly' }
+        { text: 'Custom', value: 'custom' }
       ],
+      customDates: [],
       selectedDays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
       dayOptions: [
         { text: 'Monday', value: 'Mon' },
@@ -125,17 +136,15 @@ export default {
   computed: {
     ...mapGetters(['user', 'tasks']),
     isDaily() {
-      return this.selectedType === 'daily';
+      return this.selectedMode === 'daily';
     },
-    isMonthly() {
-      return this.selectedType === 'monthly';
+    isCustom() {
+      return this.selectedMode === 'custom';
     },
     formOk() {
-      const { isDaily, form: { name }, selectedDays, selectedDate, dateRange: { end } } = this;
-      const basicCondition = name.length >= 3 && end !== null;
+      const { isDaily, form: { name }, selectedDays, customDates, dateRange: { end } } = this;
 
-      return isDaily ? (!!selectedDays.length && basicCondition) :
-        basicCondition && (selectedDate >= 1 && selectedDate <= 28);
+      return name.length >= 3 && !!end && (isDaily ? !!selectedDays.length : !!customDates.length);
     }
   },
   watch: {
@@ -154,22 +163,24 @@ export default {
         return;
       }
 
-      this.busy = true;
-      const selectedDays = this.isDaily ? [...this.selectedDays] : [];
-      let schedules = [...dateGenerator(Object.assign({ selectedDays }, this.dateRange))];
-
-      if (this.isMonthly) { // Filter out the unneeded dates
-        schedules = schedules.filter(date => date.getDate() === this.selectedDate);
+      if (this.isDaily) {
+        this.form.schedules = [...dateGenerator(Object.assign({ selectedDays: this.selectedDays }, this.dateRange))]
+          .map(date => ({ due_date: date.toISOString(), from: this.startTime, to: this.endTime }));
+      } else {
+        this.form.schedules = this.customDates
+          .map((date) => {
+            date.setUTCHours(12, 0, 0, 0);
+            date.setDate(date.getDate() + 1); // Datepicker returns previous day
+            return { due_date: date.toISOString(), from: this.startTime, to: this.endTime };
+          });
       }
 
-      this.form.schedules = schedules
-        .map(date => ({ due_date: date.toISOString(), from: this.startTime, to: this.endTime }));
-
       if (!this.form.schedules.length) {
-        this.busy = false;
         this.showFlash('No schedules can be created from your selection', 'warning');
         return;
       }
+
+      this.busy = true;
 
       this.createTask(this.form)
         .then(({ success, message }) => {

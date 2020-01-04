@@ -119,51 +119,24 @@ export default {
       today.setUTCHours(0, 0, 0, 0);
 
       return this.task.schedules
-        .map((schedule) => {
-          const date = new Date(schedule.due_date);
+        .map(({ id, done, due_date }) => {
+          const date = new Date(due_date);
           date.setUTCHours(0, 0, 0, 0);
 
-          const isToday = +today === +date && !schedule.done;
+          const isToday = +today === +date && !done;
+          const highlight = { fillMode: 'light' };
 
-          let highlight;
-          let dot;
-          if (schedule.done) { // done
-            highlight = {
-              backgroundColor: '#66CC7F',
-              borderColor: '#35B355',
-              borderWidth: '2px'
-            };
+          if (done) { // done
+            highlight.color = 'green';
           } else if (isToday) { // today
-            dot = {
-              backgroundColor: '#8B8C8B',
-              borderColor: '#333333',
-              borderWidth: '2px'
-            };
+            highlight.color = 'gray';
           } else if (today <= date) { // upcoming
-            highlight = {
-              backgroundColor: '#D3D3D3',
-              borderColor: '#8B8C8B',
-              borderWidth: '2px'
-            };
+            highlight.color = 'gray';
           } else { // missed
-            highlight = {
-              backgroundColor: '#FF8080',
-              borderColor: '#FF6666',
-              borderWidth: '2px'
-            };
+            highlight.color = 'red';
           }
 
-          const obj = {
-            contentStyle: { color: 'white' },
-            highlight,
-            dates: date,
-            key: schedule.id,
-            customData: schedule
-          };
-          const highlightStyle = { highlight, contentStyle: { color: 'white' } };
-          const dotStyle = { dot, contentStyle: { color: 'black' } };
-
-          return !isToday ? Object.assign(obj, highlightStyle) : Object.assign(obj, dotStyle);
+          return isToday ? { dates: date, key: id, dot: highlight } : { dates: date, key: id, highlight };
         });
     }
   },
@@ -189,6 +162,11 @@ export default {
 .streak {
   font-size: 3.5rem;
   color: #999;
+}
+.upcoming {
+  background-color: #D3D3D3;
+  border-color: #8B8C8B;
+  border-width: 2px;
 }
 </style>
 
