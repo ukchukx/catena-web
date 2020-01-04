@@ -7,6 +7,13 @@
       </div>
     </div>
     <div class="row mt-4">
+      <div class="col-sm-12 col-md-9 mb-3">
+        <div class="card">
+          <div class="card-body">
+            <router-view/>
+          </div>
+        </div>
+      </div>
       <div class="col-sm-12 col-md-3">
         <div class="card">
           <div class="card-body">
@@ -44,13 +51,6 @@
                 class="btn btn-outline-secondary"
               >Change password</button>
             </form>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-12 col-md-9">
-        <div class="card">
-          <div class="card-body">
-            <router-view/>
           </div>
         </div>
       </div>
