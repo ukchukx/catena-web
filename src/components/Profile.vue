@@ -35,7 +35,7 @@
                     :disabled="!updateFormOk"
                     type="submit"
                     class="btn btn-outline-secondary"
-                  >Update username</button>
+                  >Update</button>
                 </div>
               </div>
             </form>
