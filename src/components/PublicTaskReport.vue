@@ -25,7 +25,7 @@
             <div class="row mt-4 mb-4">
               <div class="col">
                 <span class="h3">By </span>
-                <span class="text-muted task-owner h3">{{ task.user.username }}</span>
+                <span class="text-muted task-owner h3">{{ username }}</span>
               </div>
             </div>
             <Streaks :task="task" :today="today" />
@@ -71,6 +71,11 @@ export default {
   },
   computed: {
     ...mapGetters(['user']),
+    username() {
+      const { task: { user: { email, username } } } = this;
+
+      return !!username ? username : email.split('@')[0];
+    },
     isLoggedIn() {
       return !!this.user.id;
     },
@@ -103,7 +108,7 @@ export default {
     }
   },
   created() {
-    if (!!this.$route.params.id) { // eslint-disable-line no-extra-boolean-cast
+    if (!!this.$route.params.id) {
       this.fetchTask(this.$route.params.id)
         .then(({ success, data }) => {
           if (success) {
