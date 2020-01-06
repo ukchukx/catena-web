@@ -15,11 +15,11 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapActions } from 'vuex';
 import Flash from '@/mixins/Flash';
 
 export default {
-  name: 'Task',
+  name: 'DueTask',
   mixins: [Flash],
   props: {
     task: {
@@ -32,7 +32,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['tasks']),
     todaySchedule() {
       return this.task.schedules
         .find(({ due_date, from, to, done }) => {

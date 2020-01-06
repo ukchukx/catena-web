@@ -24,11 +24,15 @@
 
         <b-tab title="All schedules">
           <ul class="list-group mt-3">
-            <Task :now="now" :task="task" v-for="task in tasks" :key="task.id"/>
+            <Task :task="task" v-for="task in otherTasks" :key="task.id"/>
           </ul>
         </b-tab>
 
-        <b-tab title="Archived schedules" disabled></b-tab>
+        <b-tab title="Archived schedules">
+          <ul class="list-group mt-3">
+            <ArchivedTask :task="task" v-for="task in archivedTasks" :key="task.id"/>
+          </ul>
+        </b-tab>
       </b-tabs>
     </div>
   </div>
@@ -40,11 +44,13 @@ import { mapGetters } from 'vuex';
 import EmptyTaskView from '@/components/EmptyTaskView';
 import Task from '@/components/Task';
 import DueTask from '@/components/DueTask';
+import ArchivedTask from '@/components/ArchivedTask';
 import Flash from '@/mixins/Flash';
 
 export default {
   name: 'Tasks',
   components: {
+    ArchivedTask,
     DueTask,
     EmptyTaskView,
     Task
@@ -70,6 +76,14 @@ export default {
     },
     hasDueTasks() {
       return !!this.dueTasks.length;
+    },
+    archivedTasks() {
+      return this.tasks.filter(({ deleted_at }) => !!deleted_at);
+    },
+    otherTasks() {
+      const dueIds = this.dueTasks.map(({ id }) => id);
+
+      return this.tasks.filter(({ deleted_at, id }) => !deleted_at && !dueIds.includes(id));
     }
   },
   mounted() {

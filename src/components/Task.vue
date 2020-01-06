@@ -15,7 +15,7 @@
           <button v-if="!isPrivate" class="btn btn-sm btn-outline-secondary" @click.stop.prevent="copyToClipboard()">
             Copy public link
           </button>
-          <button class="btn btn-sm btn-outline-danger" @click.stop.prevent="doDelete()">Delete</button>
+          <button class="btn btn-sm btn-outline-danger" @click.stop.prevent="doArchive()">Archive</button>
         </div>
       </div>
     </div>
@@ -50,10 +50,6 @@ export default {
     task: {
       required: true,
       type: Object
-    },
-    now: {
-      required: true,
-      type: Number
     }
   },
   data() {
@@ -88,7 +84,7 @@ export default {
     if (this.todaySchedule && this.todaySchedule) this.form.id = this.todaySchedule.id;
   },
   methods: {
-    ...mapActions(['deleteTask', 'updateTask', 'markTaskAsDone', 'updateSchedule']),
+    ...mapActions(['archiveTask', 'updateTask', 'markTaskAsDone', 'updateSchedule']),
     toggleForm() {
       this.showForm = !this.showForm;
     },
@@ -150,20 +146,15 @@ export default {
 
       document.body.removeChild(textArea);
     },
-    doDelete() {
+    doArchive() {
       if (this.busy) return;
-      if (!confirm('Are you sure?')) return; // eslint-disable-line no-alert
 
       this.busy = true;
 
-      this.deleteTask(this.task)
-        .then((success) => {
+      this.archiveTask(this.task)
+        .then(({ success }) => {
           this.busy = false;
-          if (success) {
-            this.showFlash('Task deleted', 'success');
-          } else {
-            this.showFlash('Task not deleted', 'warning');
-          }
+          if (!success) this.showFlash('Archival failed', 'warning');
         })
         .catch(({ message }) => {
           this.busy = false;

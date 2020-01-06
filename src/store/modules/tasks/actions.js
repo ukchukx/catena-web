@@ -160,9 +160,33 @@ export function deleteTask({ commit }, task) {
     .catch(({ response: { data } }) => Promise.reject(data));
 }
 
+export function archiveTask({ commit }, task) {
+  const id = typeof task === 'object' ? task.id : task;
+  return axios
+    .post(`/tasks/${id}/archive`)
+    .then(({ data: { success, data, message } }) => {
+      if (success) commit(SAVE_TASK, data);
+      
+      return { success, message };
+    })
+    .catch(({ response: { data } }) => Promise.reject(data));
+}
+
+export function restoreTask({ commit }, task) {
+  const id = typeof task === 'object' ? task.id : task;
+  return axios
+    .post(`/tasks/${id}/restore`)
+    .then(({ data: { success, data, message } }) => {
+      if (success) commit(SAVE_TASK, data);
+      
+      return { success, message };
+    })
+    .catch(({ response: { data } }) => Promise.reject(data));
+}
+
 export function updateSchedule({ commit }, schedule) {
   return axios
-    .put(`/tasks/update_schedule/${schedule.id}`, schedule)
+    .put(`/tasks/schedules/${schedule.id}`, schedule)
     .then(({ data: { success, data } }) => {
       if (success) {
         commit(SAVE_SCHEDULE, data);
