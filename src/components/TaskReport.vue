@@ -2,34 +2,8 @@
   <!-- eslint-disable -->
   <div>
     <ProfileLink/>
-    <div class="row mt-4">
-      <div class="col">
-        <h1 class="task-name">{{ task.name }}</h1>
-      </div>
-    </div>
-    <div class="row mt-2">
-      <div class="col-md-4 col-sm-12">
-        <p class="sub-text text-muted text-center">
-          <span class="h2">Current streak</span>
-          <br>
-          <span class="streak font-weight-bold">{{ currentStreak }}</span>
-        </p>
-      </div>
-      <div class="col-md-4 col-sm-12">
-        <p class="sub-text text-muted text-center">
-          <span class="h2">Longest streak</span>
-          <br>
-          <span class="streak font-weight-bold">{{ longestStreak }}</span>
-        </p>
-      </div>
-      <div class="col-md-4 col-sm-12">
-        <p class="sub-text text-muted text-center">
-          <span class="h2">Performance</span>
-          <br>
-          <span class="streak font-weight-bold">{{ performance }}</span>
-        </p>
-      </div>
-    </div>
+    <TaskDetails :task="task" />
+    <Streaks :task="task" :today="today" />
     <div class="row mt-3">
       <div class="col">
         <v-calendar :is-expanded="true" :attributes="events"/>
@@ -41,11 +15,15 @@
 <script>
 import { mapGetters } from 'vuex';
 import ProfileLink from '@/components/ProfileLink';
+import Streaks from './Streaks';
+import TaskDetails from './TaskDetails';
 
 export default {
   name: 'TaskReport',
   components: {
-    ProfileLink
+    ProfileLink,
+    Streaks,
+    TaskDetails
   },
   computed: {
     ...mapGetters(['tasks']),
@@ -57,62 +35,6 @@ export default {
       const today = new Date();
       today.setUTCHours(0, 0, 0, 0);
       return today;
-    },
-    performance() {
-      let percent = 0;
-      
-      if (this.streakable.length) {
-        const completed = this.streakable.filter(({ done }) => done).length;
-        percent = +((completed * 100) / this.streakable.length).toFixed(2);
-      }
-
-      return `${percent}%`;
-    },
-    currentStreak() {
-      const result = [];
-      const today = new Date();
-      today.setUTCHours(0, 0, 0, 0);
-      /* eslint-disable no-plusplus */
-      for (let d = this.streakable.length - 1; d >= 0; --d) {
-        const date = new Date(this.streakable[d].due_date);
-        date.setUTCHours(0, 0, 0, 0);
-
-        if (this.streakable[d].done) {
-          result.push(this.streakable[d]);
-        } else if (+today !== +date) {
-          break;
-        }
-      }
-
-      return result.length;
-    },
-    longestStreak() {
-      const streaks = [];
-      /* eslint-disable no-plusplus */
-      for (let d = 0; d < this.streakable.length; ++d) {
-        const x = [];
-        while (this.streakable[d] && this.streakable[d].done) {
-          x.push(this.streakable[d]);
-          ++d;
-        }
-        streaks.push(x);
-      }
-
-      return !streaks.length ? 0 : Math.max(...streaks.map(streak => streak.length));
-    },
-    streakable() {
-      const today = new Date();
-      today.setUTCHours(0, 0, 0, 0);
-
-      return this.task.schedules
-        .filter(({ due_date, done }) => {
-          const date = new Date(due_date);
-          date.setUTCHours(0, 0, 0, 0);
-
-          const isToday = +today === +date && !done;
-
-          return isToday || today >= date;
-        });
     },
     events() {
       const today = new Date();
@@ -148,13 +70,6 @@ export default {
 };
 </script>
 <style scoped>
-.task-name {
-  font-size: 3.5rem;
-  font-weight: 500;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
 .sub-text {
   font-size: 2rem !important;
   font-weight: 400;

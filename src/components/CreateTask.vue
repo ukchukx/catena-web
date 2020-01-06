@@ -8,6 +8,11 @@
           <b-form-group label="Title">
             <b-form-input type="text" v-model="form.name" required placeholder="Schedule title..."></b-form-input>
           </b-form-group>
+          <b-form-group>
+            <b-form-checkbox v-model="isPrivate">Private</b-form-checkbox>
+            <small v-if="isPrivate">No one else can see your task report</small>
+            <small v-else>Anyone with the link you share can see your task report</small>
+          </b-form-group>
           <!-- <b-form-group label="Description">
             <b-form-textarea
               :rows="3"
@@ -18,8 +23,8 @@
           <b-form-group>
             <b-form-radio-group v-model="selectedMode" :options="typeOptions"/>
           </b-form-group>
-          <b-form-group v-if="isDaily">
-            <b-form-checkbox-group v-model="selectedDays" :options="dayOptions"/>
+          <b-form-group v-if="isDaily" label="Choose days">
+            <b-form-checkbox-group stacked v-model="selectedDays" :options="dayOptions"/>
           </b-form-group>
           <b-form-group v-if="isCustom" label="Choose dates">
             <v-date-picker
@@ -87,9 +92,11 @@ export default {
 
     return {
       busy: false,
+      isPrivate: true,
       form: {
         name: '',
         description: '',
+        visibility: 'private',
         schedules: []
       },
       endOfYear,
@@ -153,6 +160,9 @@ export default {
     },
     endTime(_) {
       this.startTimeConfig.maxDate = this.endTime;
+    },
+    isPrivate(val) {
+      this.form.visibility = val ? 'private' : 'public';
     }
   },
   methods: {

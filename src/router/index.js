@@ -10,6 +10,7 @@ const Profile = () => import(/* webpackChunkName: "group-profile" */ '@/componen
 const Tasks = () => import(/* webpackChunkName: "group-profile" */ '@/components/Tasks');
 const CreateTask = () => import('@/components/CreateTask');
 const TaskReport = () => import('@/components/TaskReport');
+const PublicTaskReport = () => import('@/components/PublicTaskReport');
 
 Vue.use(VueRouter);
 
@@ -52,6 +53,15 @@ const router = new VueRouter({
       }
     },
     {
+      path: '/app/t/:id',
+      name: 'PublicTaskReport',
+      component: PublicTaskReport,
+      meta: {
+        requiresAuth: false,
+        authRoute: true
+      }
+    },
+    {
       path: '/app/me',
       name: 'Profile',
       component: Profile,
@@ -65,12 +75,12 @@ const router = new VueRouter({
           component: Tasks
         },
         {
-          path: 'create-task',
+          path: 'create',
           name: 'CreateTask',
           component: CreateTask
         },
         {
-          path: 'task/:id',
+          path: 't/:id',
           name: 'TaskReport',
           component: TaskReport
         }

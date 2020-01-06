@@ -32,7 +32,7 @@ export function updateProfile({ commit }, payload) {
     .catch(({ response: { data } }) => Promise.reject(data));
 }
 
-export function changePassword(store, payload) {
+export function changePassword(_, payload) {
   return axios
     .post('/change_password', payload)
     .then(({ data: { success, message } }) => ({ success, message }))
@@ -65,7 +65,7 @@ export function authenticate({ commit }, payload) {
     .catch(({ response: { data } }) => Promise.reject(data));
 }
 
-export function forgotPassword(store, payload) {
+export function forgotPassword(_, payload) {
   return axios
     .post('/forgot', payload)
     .then(({ data }) => data)
@@ -127,13 +127,23 @@ export function fetchTasks({ commit }) {
     .catch(({ response: { data } }) => Promise.reject(data));
 }
 
+export function fetchTask({ commit }, taskId) {
+  return axios
+    .get(`/public/tasks/${taskId}`)
+    .then(({ data: { success, data } }) => {
+      if (success) commit(SAVE_TASK, data);
+      
+      return { success, data };
+    })
+    .catch(({ response: { data } }) => Promise.reject(data));
+}
+
 export function updateTask({ commit }, task) {
   return axios
     .put(`/tasks/${task.id}`, task)
     .then(({ data: { success, data, message } }) => {
-      if (success) {
-        commit(SAVE_TASK, data);
-      }
+      if (success) commit(SAVE_TASK, data);
+      
       return { success, message };
     })
     .catch(({ response: { data } }) => Promise.reject(data));
