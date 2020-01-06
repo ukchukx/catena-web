@@ -38,7 +38,7 @@
         </div>
       </div>
 
-      <div class="col-sm-12 mb-3">
+      <div class="col-sm-12 mb-3" v-if="!isLoggedIn">
         <div class="card">
           <div class="card-body">
             <router-link :to="loginPath"><u>Sign up to create your own schedules</u></router-link>            
@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import Streaks from './Streaks';
 import TaskDetails from './TaskDetails';
 
@@ -70,6 +70,10 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(['user']),
+    isLoggedIn() {
+      return !!this.user.id;
+    },
     today() {
       const today = new Date();
       today.setUTCHours(0, 0, 0, 0);

@@ -58,7 +58,7 @@ const router = new VueRouter({
       component: PublicTaskReport,
       meta: {
         requiresAuth: false,
-        authRoute: true
+        authRoute: false
       }
     },
     {
