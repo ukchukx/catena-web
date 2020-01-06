@@ -5,7 +5,7 @@
       <button
         class="btn btn-outline-primary mb-3"
         @click.stop.prevent="createNewTask()"
-      >&plus; Add task</button>
+      >&plus; Add schedule</button>
     </div>
 
     <div class="col-sm-12">
@@ -22,13 +22,13 @@
           </div>
         </b-tab>
 
-        <b-tab title="All tasks">
+        <b-tab title="All schedules">
           <ul class="list-group mt-3">
             <Task :now="now" :task="task" v-for="task in tasks" :key="task.id"/>
           </ul>
         </b-tab>
 
-        <b-tab title="Archived tasks" disabled></b-tab>
+        <b-tab title="Archived schedules" disabled></b-tab>
       </b-tabs>
     </div>
   </div>

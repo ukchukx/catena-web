@@ -5,8 +5,8 @@
     <div class="row mt-4">
       <div class="col-sm-12 col-md-6 mx-auto">
         <b-form @submit.stop.prevent="onSubmit()">
-          <b-form-group label="Name">
-            <b-form-input type="text" v-model="form.name" required placeholder="Task name..."></b-form-input>
+          <b-form-group label="Title">
+            <b-form-input type="text" v-model="form.name" required placeholder="Schedule title..."></b-form-input>
           </b-form-group>
           <!-- <b-form-group label="Description">
             <b-form-textarea
