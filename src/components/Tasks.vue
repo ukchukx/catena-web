@@ -81,9 +81,9 @@ export default {
       return this.tasks.filter(({ deleted_at }) => !!deleted_at);
     },
     otherTasks() {
-      const dueIds = this.dueTasks.map(({ id }) => id);
+      const archivedIds = this.archivedTasks.map(({ id }) => id);
 
-      return this.tasks.filter(({ deleted_at, id }) => !deleted_at && !dueIds.includes(id));
+      return this.tasks.filter(({ deleted_at, id }) => !deleted_at && !archivedIds.includes(id));
     }
   },
   mounted() {
