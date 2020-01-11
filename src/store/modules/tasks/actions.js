@@ -8,25 +8,47 @@ import {
   SAVE_SCHEDULE
 } from './mutation-types';
 
-export function fetchProfile({ commit }) {
+export function saveTask({ commit }, task) {
+  if (!task) return;
+
+  commit(SAVE_TASK, task);
+}
+
+export function removeTask({ commit }, task) {
+  if (!task) return;
+
+  commit(DELETE_TASK, typeof task === 'object' ? task.id : task);
+}
+
+export function saveSchedule({ commit }, schedule) {
+  if (!schedule) return;
+
+  commit(SAVE_SCHEDULE, schedule);
+}
+
+export function saveUser({ commit }, user) {
+  if (!user) return;
+
+  commit(SAVE_USER, user);
+}
+
+export function fetchProfile(state) {
   return axios
     .get('/profile')
     .then(({ data: { success, data } }) => {
-      if (success) {
-        commit(SAVE_USER, data);
-      }
+      if (success) saveUser(state, data);
+
       return success;
     })
     .catch(({ response: { data } }) => Promise.reject(data));
 }
 
-export function updateProfile({ commit }, payload) {
+export function updateProfile(state, payload) {
   return axios
     .put('/profile', payload)
     .then(({ data: { success, data, message } }) => {
-      if (success) {
-        commit(SAVE_USER, data);
-      }
+      if (success) saveUser(state, data);
+      
       return { success, message };
     })
     .catch(({ response: { data } }) => Promise.reject(data));
@@ -39,26 +61,27 @@ export function changePassword(_, payload) {
     .catch(({ response: { data } }) => Promise.reject(data));
 }
 
-export function signup({ commit }, payload) {
+export function signup(state, payload) {
   return axios
     .post('/signup', payload)
     .then(({ data: { success, data, token: { token } } }) => {
       if (success) {
-        commit(SAVE_USER, data);
-        commit(SAVE_TOKEN, token);
+        saveUser(state, data);
+        state.commit(SAVE_TOKEN, token);
       }
+
       return success;
     })
     .catch(({ response: { data } }) => Promise.reject(data));
 }
 
-export function authenticate({ commit }, payload) {
+export function authenticate(state, payload) {
   return axios
     .post('/authenticate', payload)
     .then(({ data: { success, data, token: { token } } }) => {
       if (success) {
-        commit(SAVE_TOKEN, token);
-        commit(SAVE_USER, data);
+        state.commit(SAVE_TOKEN, token);
+        saveUser(state, data);
       }
       return success;
     })
@@ -72,13 +95,13 @@ export function forgotPassword(_, payload) {
     .catch(({ response: { data } }) => data);
 }
 
-export function resetPassword({ commit }, payload) {
+export function resetPassword(state, payload) {
   return axios
     .post('/reset', payload)
     .then(({ data: { success, data, token: { token } } }) => {
       if (success) {
-        commit(SAVE_USER, data);
-        commit(SAVE_TOKEN, token);
+        saveUser(state, data);
+        state.commit(SAVE_TOKEN, token);
       }
       return success;
     })
@@ -91,24 +114,24 @@ export function deleteUser({ commit }) {
   commit(SAVE_TASKS, []);
 }
 
-export function createTask({ commit }, payload) {
+export function createTask(state, payload) {
   return axios
     .post('/tasks', payload)
     .then(({ data: { success, data, message } }) => {
       if (success) {
-        commit(SAVE_TASK, data);
+        saveTask(state, data);
       }
       return { success, message };
     })
     .catch(({ response: { data } }) => Promise.reject(data));
 }
 
-export function markTaskAsDone({ commit }, task) {
+export function markTaskAsDone(state, task) {
   return axios
     .post(`/tasks/${task.id}/done`)
     .then(({ data: { success, data } }) => {
       if (success) {
-        commit(SAVE_TASK, data);
+        saveTask(state, data);
       }
       return success;
     })
@@ -127,69 +150,69 @@ export function fetchTasks({ commit }) {
     .catch(({ response: { data } }) => Promise.reject(data));
 }
 
-export function fetchTask({ commit }, taskId) {
+export function fetchTask(state, taskId) {
   return axios
     .get(`/public/tasks/${taskId}`)
     .then(({ data: { success, data } }) => {
-      if (success) commit(SAVE_TASK, data);
+      if (success) saveTask(state, data);
       
       return { success, data };
     })
     .catch(({ response: { data } }) => Promise.reject(data));
 }
 
-export function updateTask({ commit }, task) {
+export function updateTask(state, task) {
   return axios
     .put(`/tasks/${task.id}`, task)
     .then(({ data: { success, data, message } }) => {
-      if (success) commit(SAVE_TASK, data);
+      if (success) saveTask(state, data);
       
       return { success, message };
     })
     .catch(({ response: { data } }) => Promise.reject(data));
 }
 
-export function deleteTask({ commit }, task) {
+export function deleteTask(state, task) {
   const id = typeof task === 'object' ? task.id : task;
   return axios
     .delete(`/tasks/${id}`)
     .then(() => {
-      commit(DELETE_TASK, id);
+      removeTask(state, id);
       return true;
     })
     .catch(({ response: { data } }) => Promise.reject(data));
 }
 
-export function archiveTask({ commit }, task) {
+export function archiveTask(state, task) {
   const id = typeof task === 'object' ? task.id : task;
   return axios
     .post(`/tasks/${id}/archive`)
     .then(({ data: { success, data, message } }) => {
-      if (success) commit(SAVE_TASK, data);
+      if (success) saveTask(state, data);
       
       return { success, message };
     })
     .catch(({ response: { data } }) => Promise.reject(data));
 }
 
-export function restoreTask({ commit }, task) {
+export function restoreTask(state, task) {
   const id = typeof task === 'object' ? task.id : task;
   return axios
     .post(`/tasks/${id}/restore`)
     .then(({ data: { success, data, message } }) => {
-      if (success) commit(SAVE_TASK, data);
+      if (success) saveTask(state, data);
       
       return { success, message };
     })
     .catch(({ response: { data } }) => Promise.reject(data));
 }
 
-export function updateSchedule({ commit }, schedule) {
+export function updateSchedule(state, schedule) {
   return axios
     .put(`/tasks/schedules/${schedule.id}`, schedule)
     .then(({ data: { success, data } }) => {
       if (success) {
-        commit(SAVE_SCHEDULE, data);
+        saveSchedule(state, data);
       }
       return success;
     })

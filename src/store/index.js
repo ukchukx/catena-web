@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import createPersistedState from 'vuex-persistedstate';
 import createMutationsSharer from 'vuex-shared-mutations';
+import initSocket from '@/socket';
 import tasks from './modules/tasks';
 
 Vue.use(Vuex);
@@ -15,7 +16,8 @@ const store = new Vuex.Store({
     createMutationsSharer({ predicate: (mutation, state) => true }),
     createPersistedState({ key: 'catena' })
   ]
-
 });
+
+initSocket(store);
 
 export default store;

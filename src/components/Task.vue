@@ -84,7 +84,7 @@ export default {
     if (this.todaySchedule && this.todaySchedule) this.form.id = this.todaySchedule.id;
   },
   methods: {
-    ...mapActions(['archiveTask', 'updateTask', 'markTaskAsDone', 'updateSchedule']),
+    ...mapActions(['archiveTask', 'updateTask', 'markTaskAsDone']),
     toggleForm() {
       this.showForm = !this.showForm;
     },

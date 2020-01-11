@@ -94,6 +94,11 @@ export default {
       return !!username && username !== this.user.username;
     }
   },
+  watch: {
+    'user.username'(newUsername) {
+      this.updateForm.username = newUsername;
+    }
+  },
   created() {
     this.updateForm.username = this.user.username || this.user.email;
     this.fetchTasks();
