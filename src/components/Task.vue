@@ -9,7 +9,7 @@
       </div>
       <div class="col-md-3 col-sm-12 text-right">
         <div class="btn-group">
-          <button class="btn btn-sm btn-outline-secondary" @click.stop.prevent="toggleForm()">
+          <button class="btn btn-sm btn-outline-secondary" @click.stop.prevent="editForm()">
             Edit
           </button>
           <button v-if="!isPrivate" class="btn btn-sm btn-outline-secondary" @click.stop.prevent="copyToClipboard()">
@@ -17,23 +17,6 @@
           </button>
           <button class="btn btn-sm btn-outline-danger" @click.stop.prevent="doArchive()">Archive</button>
         </div>
-      </div>
-    </div>
-    <hr v-if="showForm">
-    <div class="row" v-if="showForm">
-      <div class="col-md-6 col-sm-12">
-        <b-form @submit.stop.prevent="update()">
-          <b-form-group label="Name">
-            <input type="text" v-model="form.name" class="form-control">
-          </b-form-group>
-          <b-form-group label="Description">
-            <b-form-textarea :rows="3" v-model="form.description" placeholder="Description"/>
-          </b-form-group>
-          <b-form-group>
-            <b-form-checkbox v-model="isPrivate">Private</b-form-checkbox>
-          </b-form-group>
-          <b-button :disabled="!formOk" type="submit" variant="primary">Save</b-button>
-        </b-form>
       </div>
     </div>
   </li>
@@ -54,30 +37,14 @@ export default {
   },
   data() {
     return {
-      form: {
-        name: this.task.name,
-        description: this.task.description,
-        visibility: this.task.visibility,
-        id: this.task.id
-      },
       isPrivate: this.task.visibility === 'private',
-      showForm: false,
       busy: false
     };
   },
   computed: {
     ...mapGetters(['tasks']),
-    formOk() {
-      const { form: { name, description } } = this;
-      return name.trim().length >= 3 || description.trim() !== this.task.description;
-    },
     taskRoute() {
       return { name: 'TaskReport', params: { id: this.task.id } };
-    }
-  },
-  watch: {
-    isPrivate(val) {
-      this.form.visibility = val ? 'private' : 'public';
     }
   },
   mounted() {
@@ -85,8 +52,8 @@ export default {
   },
   methods: {
     ...mapActions(['archiveTask', 'updateTask', 'markTaskAsDone']),
-    toggleForm() {
-      this.showForm = !this.showForm;
+    editForm() {
+      this.$router.push({ name: 'UpdateTask', params: { id: this.task.id } });
     },
     resolveUrl() {
       return `${window.location.origin}/${this.$router.resolve({ ...this.taskRoute, name: 'PublicTaskReport' }).href}`;
@@ -155,26 +122,6 @@ export default {
         .then(({ success }) => {
           this.busy = false;
           if (!success) this.showFlash('Archival failed', 'warning');
-        })
-        .catch(({ message }) => {
-          this.busy = false;
-          this.showFlash(message, 'warning');
-        });
-    },
-    update() {
-      if (this.busy) return;
-      this.busy = true;
-      this.form.description = this.form.description.trim();
-      this.form.name = this.form.name.trim();
-
-      this.updateTask(this.form)
-        .then((success) => {
-          this.busy = false;
-          if (success) {
-            this.showFlash('Task updated', 'success');
-          } else {
-            this.showFlash('Task not updated', 'warning');
-          }
         })
         .catch(({ message }) => {
           this.busy = false;

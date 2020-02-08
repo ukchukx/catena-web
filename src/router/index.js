@@ -9,6 +9,7 @@ const Reset = () => import('@/components/Reset');
 const Profile = () => import(/* webpackChunkName: "group-profile" */ '@/components/Profile');
 const Tasks = () => import(/* webpackChunkName: "group-profile" */ '@/components/Tasks');
 const CreateTask = () => import('@/components/CreateTask');
+const UpdateTask = () => import('@/components/UpdateTask');
 const TaskReport = () => import('@/components/TaskReport');
 const PublicTaskReport = () => import('@/components/PublicTaskReport');
 
@@ -78,6 +79,11 @@ const router = new VueRouter({
           path: 'create',
           name: 'CreateTask',
           component: CreateTask
+        },
+        {
+          path: 'edit/:id',
+          name: 'UpdateTask',
+          component: UpdateTask
         },
         {
           path: 't/:id',
