@@ -66,12 +66,9 @@ export default {
 
       this.markTaskAsDone(this.task)
         .then((success) => {
-          if (success) {
-            this.showFlash('Done for today', 'success');
-            return;
+          if (!success) {
+            this.showFlash('Could not complete task', 'error');
           }
-
-          this.showFlash('Could not complete task', 'warning');
         })
         .catch(({ message }) => this.showFlash(message, 'warning'))
         .finally(() => {

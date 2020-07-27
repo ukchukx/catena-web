@@ -50,15 +50,15 @@ export default {
     },
     dueIcon() {
       const common = 'fa-check-square fa-2x';
-      return this.currentRoute === 'DueTasks' ? `fas ${common}` : `far ${common}`;
+      return this.currentRoute === 'DueTasks' ? `text-primary fas ${common}` : `far ${common}`;
     },
     allIcon() {
       const common = 'fa-list-alt fa-2x';
-      return this.currentRoute === 'Tasks' ? `fas ${common}` : `far ${common}`;
+      return this.currentRoute === 'Tasks' ? `text-primary fas ${common}` : `far ${common}`;
     },
     accountIcon() {
       const common = 'fa-user fa-2x';
-      return this.currentRoute === 'Profile' ? `fas ${common}` : `far ${common}`;
+      return this.currentRoute === 'Profile' ? `text-primary fas ${common}` : `far ${common}`;
     }
   }
 };
