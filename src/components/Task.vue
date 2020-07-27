@@ -2,18 +2,18 @@
   <!-- eslint-disable -->
   <li class="list-group-item">
     <div class="row">
-      <div class="col-md-9 col-sm-12">
+      <div class="col-sm-12">
         <h5>
           <router-link :to="taskRoute">{{ task.name }}</router-link>
         </h5>
       </div>
-      <div class="col-md-3 col-sm-12 text-right">
+      <div class="col-sm-12 text-right">
         <div class="btn-group">
           <button class="btn btn-sm btn-outline-secondary" @click.stop.prevent="editForm()">
             Edit
           </button>
           <button v-if="!isPrivate" class="btn btn-sm btn-outline-secondary" @click.stop.prevent="copyToClipboard()">
-            Copy public link
+            Copy link
           </button>
           <button class="btn btn-sm btn-outline-danger" @click.stop.prevent="doArchive()">Archive</button>
         </div>

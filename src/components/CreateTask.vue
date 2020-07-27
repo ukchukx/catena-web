@@ -1,7 +1,7 @@
 <template>
   <!-- eslint-disable -->
-  <div>
-    <ProfileLink/>
+  <Page>
+    <TaskListLink/>
     <div class="row mt-4">
       <div class="col-sm-12 col-md-6 mx-auto">
         <b-form @submit.stop.prevent="onSubmit()">
@@ -66,7 +66,7 @@
         </b-form>
       </div>
     </div>
-  </div>
+  </Page>
 </template>
 
 <script>
@@ -74,13 +74,15 @@ import { mapActions, mapGetters } from 'vuex';
 import flatPickr from 'vue-flatpickr-component';
 import Flash from '@/mixins/Flash';
 import Filters from '@/mixins/Filters';
-import ProfileLink from '@/components/ProfileLink';
+import TaskListLink from '@/components/TaskListLink';
+import Page from '@/components/Page';
 import dateGenerator from '@/utils/dateGenerator';
 
 export default {
   name: 'CreateTask',
   components: {
-    ProfileLink,
+    TaskListLink,
+    Page,
     flatPickr
   },
   mixins: [Flash, Filters],
@@ -155,10 +157,10 @@ export default {
     }
   },
   watch: {
-    startTime(_) {
+    startTime() {
       this.endTimeConfig.minDate = this.startTime;
     },
-    endTime(_) {
+    endTime() {
       this.startTimeConfig.maxDate = this.endTime;
     },
     isPrivate(val) {

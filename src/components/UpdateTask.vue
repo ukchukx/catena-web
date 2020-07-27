@@ -1,7 +1,7 @@
 <template>
   <!-- eslint-disable -->
-  <div>
-    <ProfileLink/>
+  <Page>
+    <TaskListLink/>
     <div class="row mt-4">
       <div class="col-sm-12 col-md-6 mx-auto">
         <b-form @submit.stop.prevent="onSubmit()">
@@ -46,7 +46,7 @@
                 v-model="customDates"
               />
             </b-form-group>
-            <!-- 
+            <!--
             <b-form-group label="Start time - end time">
               <div class="row">
                 <div class="col">
@@ -56,7 +56,7 @@
                   <flat-pickr :config="endTimeConfig" v-model="endTime" class="form-control" />
                 </div>
               </div>
-            </b-form-group> 
+            </b-form-group>
             -->
             <b-form-group label="Start date - end date">
               <p class="text-muted">
@@ -78,7 +78,7 @@
         </b-form>
       </div>
     </div>
-  </div>
+  </Page>
 </template>
 
 <script>
@@ -86,13 +86,15 @@ import { mapActions, mapGetters } from 'vuex';
 import flatPickr from 'vue-flatpickr-component';
 import Flash from '@/mixins/Flash';
 import Filters from '@/mixins/Filters';
-import ProfileLink from '@/components/ProfileLink';
+import Page from '@/components/Page';
+import TaskListLink from '@/components/TaskListLink';
 import dateGenerator from '@/utils/dateGenerator';
 
 export default {
   name: 'UpdateTask',
   components: {
-    ProfileLink,
+    TaskListLink,
+    Page,
     flatPickr
   },
   mixins: [Flash, Filters],

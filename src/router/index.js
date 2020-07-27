@@ -2,12 +2,13 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import store from '@/store';
 
-const Login = () => import('@/components/Login');
-const Signup = () => import('@/components/Signup');
-const Forgot = () => import('@/components/Forgot');
-const Reset = () => import('@/components/Reset');
-const Profile = () => import(/* webpackChunkName: "group-profile" */ '@/components/Profile');
-const Tasks = () => import(/* webpackChunkName: "group-profile" */ '@/components/Tasks');
+const Login = () => import(/* webpackChunkName: "auth" */ '@/components/Login');
+const Signup = () => import(/* webpackChunkName: "auth" */ '@/components/Signup');
+const Forgot = () => import(/* webpackChunkName: "auth" */ '@/components/Forgot');
+const Reset = () => import(/* webpackChunkName: "auth" */ '@/components/Reset');
+const Profile = () => import('@/components/Profile');
+const DueTasks = () => import('@/components/DueTasks');
+const Tasks = () => import('@/components/Tasks');
 const CreateTask = () => import('@/components/CreateTask');
 const UpdateTask = () => import('@/components/UpdateTask');
 const TaskReport = () => import('@/components/TaskReport');
@@ -54,7 +55,7 @@ const router = new VueRouter({
       }
     },
     {
-      path: '/app/t/:id',
+      path: '/app/t/:id/view',
       name: 'PublicTaskReport',
       component: PublicTaskReport,
       meta: {
@@ -68,29 +69,47 @@ const router = new VueRouter({
       component: Profile,
       meta: {
         requiresAuth: true
-      },
-      children: [
-        {
-          path: '',
-          name: 'Tasks',
-          component: Tasks
-        },
-        {
-          path: 'create',
-          name: 'CreateTask',
-          component: CreateTask
-        },
-        {
-          path: 'edit/:id',
-          name: 'UpdateTask',
-          component: UpdateTask
-        },
-        {
-          path: 't/:id',
-          name: 'TaskReport',
-          component: TaskReport
-        }
-      ]
+      }
+    },
+    {
+      path: '/app/tasks/today',
+      name: 'DueTasks',
+      component: DueTasks,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/app/tasks',
+      name: 'Tasks',
+      component: Tasks,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/app/tasks/create',
+      name: 'CreateTask',
+      component: CreateTask,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/app/t/:id/edit',
+      name: 'UpdateTask',
+      component: UpdateTask,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/app/t/:id',
+      name: 'TaskReport',
+      component: TaskReport,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/*',

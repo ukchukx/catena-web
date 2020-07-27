@@ -1,14 +1,18 @@
 <template>
   <!-- eslint-disable -->
-  <li class="list-group-item">
+  <li :class="listItemClasses">
     <div class="row">
-      <div class="col-md-9 col-sm-12">
-        <h5>{{ task.name }}</h5>
+      <div class="col-auto">
+        <span @click.stop.prevent="mark()">
+          <i v-if="busy" class="fas fa-circle-notch fa-2x fa-spin"></i>
+        <i v-else :class="checkboxClasses"></i>
+        </span>
       </div>
-      <div class="col-md-3 col-sm-12 text-right">
-        <button class="btn btn-sm btn-outline-primary" @click.stop.prevent="mark()">
-          <i class="fa fa-check"></i> Done
-        </button>
+      <div class="col">
+        <h5 class="text-truncate">
+          <del v-if="todaySchedule.done">{{ task.name }}</del>
+          <span v-else>{{ task.name }}</span>
+        </h5>
       </div>
     </div>
   </li>
@@ -31,31 +35,48 @@ export default {
       type: Number
     }
   },
+  data() {
+    return {
+      busy: false
+    };
+  },
   computed: {
+    listItemClasses() {
+      return this.todaySchedule.done ? 'list-group-item disabled' : 'list-group-item';
+    },
+    checkboxClasses() {
+      return this.todaySchedule.done ? 'far fa-check-square fa-2x' : 'far fa-square fa-2x';
+    },
     todaySchedule() {
       return this.task.schedules
-        .find(({ due_date, from, to, done }) => {
+        .find(({ due_date, from, to }) => {
           const [date] = due_date.split('T');
 
-          return new Date(`${date} ${from}`).getTime() <= this.now && 
-            this.now <= new Date(`${date} ${to}`).getTime() && 
-            !done;
+          return new Date(`${date} ${from}`).getTime() <= this.now &&
+            this.now <= new Date(`${date} ${to}`).getTime();
         });
     }
   },
   methods: {
     ...mapActions(['markTaskAsDone']),
     mark() {
+      if (this.todaySchedule.done || this.busy) return;
+
+      this.busy = true;
+
       this.markTaskAsDone(this.task)
         .then((success) => {
           if (success) {
             this.showFlash('Done for today', 'success');
             return;
           }
-          
+
           this.showFlash('Could not complete task', 'warning');
         })
-        .catch(({ message }) => this.showFlash(message, 'warning'));
+        .catch(({ message }) => this.showFlash(message, 'warning'))
+        .finally(() => {
+          this.busy = false;
+        });
     }
   }
 };

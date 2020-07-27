@@ -68,7 +68,7 @@ export default {
       },
       signupPath: { name: 'Signup' },
       forgotPath: { name: 'Forgot' },
-      profilePath: { name: 'Tasks' },
+      profilePath: { name: 'DueTasks' },
       busy: false
     };
   },

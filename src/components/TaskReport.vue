@@ -1,7 +1,7 @@
 <template>
   <!-- eslint-disable -->
-  <div>
-    <ProfileLink/>
+  <Page>
+    <TaskListLink/>
     <TaskDetails :task="task" />
     <Streaks :task="task" :today="today" />
     <div class="row mt-3">
@@ -9,19 +9,21 @@
         <v-calendar :is-expanded="true" :attributes="events"/>
       </div>
     </div>
-  </div>
+  </Page>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
-import ProfileLink from '@/components/ProfileLink';
+import TaskListLink from '@/components/TaskListLink';
+import Page from '@/components/Page';
 import Streaks from './Streaks';
 import TaskDetails from './TaskDetails';
 
 export default {
   name: 'TaskReport',
   components: {
-    ProfileLink,
+    TaskListLink,
+    Page,
     Streaks,
     TaskDetails
   },

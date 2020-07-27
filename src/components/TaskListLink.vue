@@ -11,7 +11,7 @@
 
 <script>
 export default {
-  name: 'ProfileLink',
+  name: 'TaskListLink',
   data() {
     return {
       path: { name: 'Tasks' }
