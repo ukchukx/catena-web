@@ -9,9 +9,6 @@
           </b-col>
         </b-row>
         <b-row class="mt-4">
-          <b-col sm="8" class="text-center mx-auto">
-            <flash-message/>
-          </b-col>
           <b-col sm="12" md="6" offset-md="3">
             <b-form @submit.stop.prevent="reset()">
               <b-form-group label="Password:" label-for="password">
@@ -67,7 +64,7 @@ export default {
     const { query: { token, email } } = this.$route;
 
     if (!token || !email) {
-      this.showFlash('Invalid URL', 'error', { timeout: 10000 });
+      this.showFlash('Invalid URL', 'error');
       this.$router.replace(this.loginPath);
     }
 

@@ -2,12 +2,11 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue';
 import BootstrapVue from 'bootstrap-vue';
-import VueFlashMessage from 'vue-flash-message';
+import Toasted from 'vue-toasted';
 import axios from 'axios';
 import { setupCalendar, Calendar, DatePicker } from 'v-calendar';
 import 'bootstrap/dist/css/bootstrap.css'; // eslint-disable-line import/no-extraneous-dependencies
 import 'bootstrap-vue/dist/bootstrap-vue.css';
-import 'vue-flash-message/dist/vue-flash-message.min.css';
 import 'flatpickr/dist/flatpickr.css'; // eslint-disable-line import/no-extraneous-dependencies
 import App from './App';
 import router from './router';
@@ -19,7 +18,7 @@ Vue.use(BootstrapVue);
 setupCalendar({ locale: 'en' });
 Vue.component('v-calendar', Calendar);
 Vue.component('v-date-picker', DatePicker);
-Vue.use(VueFlashMessage, { createShortcuts: false });
+Vue.use(Toasted, { position: 'bottom-center', duration: 5000 });
 
 window.axios = axios;
 axios.defaults.baseURL = `${process.env.API_HOST}/api/v1`;

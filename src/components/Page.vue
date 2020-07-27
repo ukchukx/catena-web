@@ -1,13 +1,7 @@
 <template>
   <!-- eslint-disable -->
   <div class="container-fluid">
-    <div class="row mt-2">
-      <div class="col-sm-10 mx-auto">
-        <flash-message/>
-      </div>
-    </div>
-
-    <div class="row mt-4 mb-3">
+    <div class="row mt-3 mb-3">
       <div class="col-sm-12 min-vh-100">
         <slot />
       </div>
@@ -66,9 +60,6 @@ export default {
       const common = 'fa-user fa-2x';
       return this.currentRoute === 'Profile' ? `fas ${common}` : `far ${common}`;
     }
-  },
-  mounted() {
-    console.info(this.$router.resolve(this.accountPath));
   }
 };
 </script>

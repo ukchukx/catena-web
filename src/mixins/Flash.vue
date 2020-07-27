@@ -1,9 +1,15 @@
+<template>
+  <!--  eslint-disable -->
+  <i></i>
+</template>
 <script>
 export default {
   name: 'Flash',
   methods: {
-    showFlash(message, type, options = { timeout: 5000 }) {
-      this.flash(message, type, options);
+    showFlash(message, type) {
+      type = type !== 'error' ? 'default' : type;
+
+      this.$toasted.show(message, { type });
     }
   }
 };

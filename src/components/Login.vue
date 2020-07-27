@@ -8,11 +8,7 @@
             <form-logo />
           </b-col>
         </b-row>
-        <b-row class="mt-4">
-          <b-col sm="8" class="text-center mx-auto">
-            <flash-message/>
-          </b-col>
-        </b-row>
+
         <b-row class="mt-4 px-4">
           <b-col sm="12" md="6" offset-md="3">
             <b-form @submit.stop.prevent="login()">

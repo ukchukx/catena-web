@@ -200,7 +200,7 @@ export default {
     },
     onSubmit() {
       if (this.busy) {
-        this.showFlash('Busy...', 'info', { timeout: 1000 });
+        this.showFlash('Busy...', 'info');
         return;
       }
 
