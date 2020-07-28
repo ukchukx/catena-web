@@ -66,7 +66,7 @@ export default {
   },
   updated() {
     if (!this.task) {
-      this.$router.replace({ name: 'Tasks' });
+      this.$router.replace({ name: 'DueTasks' });
     }
   }
 };

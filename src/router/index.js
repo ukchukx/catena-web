@@ -130,7 +130,7 @@ router.beforeEach((to, from, next) => {
   } else if (to.matched.some(record => record.meta.authRoute)) {
     const token = store.getters.token;
     if (token.length) { // authenticated? Send user away from here
-      next({ name: 'Tasks' });
+      next({ name: 'DueTasks' });
     } else {
       next();
     }

@@ -80,10 +80,7 @@ export default {
 
           if (!success) {
             this.showFlash('Reset failed', 'error');
-            return;
           }
-
-          this.$router.replace({ name: 'Tasks' });
         })
         .catch(({ message }) => {
           this.busy = false;

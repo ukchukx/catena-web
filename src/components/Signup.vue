@@ -60,7 +60,7 @@ export default {
         email: ''
       },
       loginPath: { name: 'Login' },
-      profilePath: { name: 'Tasks' },
+      dueTasksPath: { name: 'DueTasks' },
       busy: false
     };
   },
@@ -82,7 +82,7 @@ export default {
           if (!success) {
             this.showFlash('Could not sign up', 'error');
           } else {
-            this.$router.replace(this.profilePath);
+            this.$router.replace(this.dueTasksPath);
           }
         })
         .catch(({ message = 'Could not sign up' }) => {
