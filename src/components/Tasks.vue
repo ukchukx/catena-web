@@ -7,7 +7,7 @@
           class="btn btn-outline-primary mb-3"
           @click.stop.prevent="createNewTask()">
           <i class="fas fa-plus"></i>
-          New schedule
+          New habit
         </button>
       </div>
 
