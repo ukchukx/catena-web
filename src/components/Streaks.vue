@@ -2,25 +2,35 @@
   <!-- eslint-disable -->
   <div class="row mt-2">
     <div class="col-md-4 col-sm-12">
-      <p class="sub-text text-muted text-center">
-        <span class="h2">Current streak</span>
-        <br>
-        <span class="streak font-weight-bold">{{ currentStreak }}</span>
-      </p>
+      <div class="row">
+        <div class="col-md-12 col-sm-6 col-auto text-center text-muted">
+          <span class="h2 sub-text">Current streak</span>
+        </div>
+        <div class="col-md-12 col-sm-6 col-auto text-center text-muted mb-2">
+          <span class="streak font-weight-bold">{{ currentStreak }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-sm-12">
+      <div class="row">
+        <div class="col-md-12 col-sm-6 col-auto text-center text-muted">
+          <span class="h2 sub-text">Longest streak</span>
+        </div>
+        <div class="col-md-12 col-sm-6 col-auto text-center text-muted mb-2">
+          <span class="streak font-weight-bold">{{ longestStreak }}</span>
+        </div>
+      </div>
     </div>
     <div class="col-md-4 col-sm-12">
-      <p class="sub-text text-muted text-center">
-        <span class="h2">Longest streak</span>
-        <br>
-        <span class="streak font-weight-bold">{{ longestStreak }}</span>
-      </p>
-    </div>
-    <div class="col-md-4 col-sm-12">
-      <p class="sub-text text-muted text-center">
-        <span class="h2">Performance</span>
-        <br>
-        <span class="streak font-weight-bold">{{ performance }}</span>
-      </p>
+      <div class="row">
+        <div class="col-md-12 col-sm-6 col-auto text-center text-muted">
+          <span class="h2 sub-text">Performance</span>
+        </div>
+        <div class="col-md-12 col-sm-6 col-auto text-center text-muted mb-2">
+          <span class="streak font-weight-bold">{{ performance }}</span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -101,11 +111,13 @@ export default {
   text-overflow: ellipsis;
 }
 .sub-text {
-  font-size: 2rem !important;
+  font-size: 1.8rem !important;
+  line-height: 3rem;
   font-weight: 400;
 }
 .streak {
-  font-size: 3.5rem;
+  font-size: 2.5rem;
+  line-height: 3rem;
   color: #999;
 }
 .upcoming {
