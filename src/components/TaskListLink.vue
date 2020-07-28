@@ -2,8 +2,9 @@
   <!-- eslint-disable -->
   <div class="row">
     <div class="col-sm-6 col-md-2">
-      <router-link :to="path" class="btn btn-outline-secondary btn-sm btn-block text-left">
+      <router-link :to="path" class="text-muted text-left">
         <i class="fa fa-chevron-left"></i>
+        Habits
       </router-link>
     </div>
   </div>
