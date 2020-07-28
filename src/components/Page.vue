@@ -2,7 +2,7 @@
   <!-- eslint-disable -->
   <div class="container-fluid">
     <div class="row mt-3 mb-3">
-      <div class="col-sm-12 min-vh-100">
+      <div class="col-sm-12 min-vh-100 slot-container">
         <slot />
       </div>
     </div>
@@ -63,3 +63,8 @@ export default {
   }
 };
 </script>
+<style>
+.slot-container {
+  padding-bottom: 4.5rem;
+}
+</style>
