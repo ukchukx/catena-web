@@ -5,7 +5,10 @@
       <div class="card-body">
         <div class="row">
           <div class="offset-sm-6 col-sm-6 text-right">
-            <button @click.stop.prevent="logout()" class="btn btn-outline-secondary">Logout</button>
+            <button @click.stop.prevent="logout()" class="btn btn-outline-secondary">
+              <i class="fas fa-sign-out-alt"></i>
+              Logout
+            </button>
           </div>
         </div>
         <div class="form-group">
@@ -13,7 +16,7 @@
           <input readonly type="text" class="form-control-plaintext" :value="user.email">
         </div>
         <div class="form-group">
-          <label>Username</label>
+          <label>Username <i class="fas fa-pen"></i> </label>
           <inline-input
             @blur="handleUpdateForm"
             type="text"

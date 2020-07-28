@@ -5,8 +5,10 @@
       <div class="col-sm-12">
         <button
           class="btn btn-outline-primary mb-3"
-          @click.stop.prevent="createNewTask()"
-        >&plus; New schedule</button>
+          @click.stop.prevent="createNewTask()">
+          <i class="fas fa-plus"></i>
+          New schedule
+        </button>
       </div>
 
       <div class="col-sm-12">
@@ -18,9 +20,12 @@
           </b-tab>
 
           <b-tab title="Archived">
-            <ul class="list-group list-group-flush mt-3">
+            <ul v-if="archivedTasks.length" class="list-group list-group-flush mt-3">
               <ArchivedTask :task="task" v-for="task in archivedTasks" :key="task.id"/>
             </ul>
+            <div v-else class="col-sm-12 text-center pt-4 mt-4">
+              <h3>Nothing in your archives</h3>
+            </div>
           </b-tab>
         </b-tabs>
       </div>

@@ -3,14 +3,16 @@
   <li class="list-group-item">
     <div class="row">
       <div class="col-md-9 col-sm-12">
-        <h5>{{ task.name }}</h5>
+        <h5 class="text-truncate">{{ task.name }}</h5>
       </div>
       <div class="col-md-3 col-sm-12 text-right">
         <div class="btn-group">
           <button class="btn btn-sm btn-outline-secondary" @click.stop.prevent="doRestore()">
-            Restore
+            <i class="fas fa-angle-double-left"></i>
           </button>
-          <button class="btn btn-sm btn-outline-danger" @click.stop.prevent="doDelete()">Delete</button>
+          <button class="btn btn-sm btn-outline-danger" @click.stop.prevent="doDelete()">
+            <i class="far fa-trash-alt"></i>
+          </button>
         </div>
       </div>
     </div>
@@ -44,12 +46,17 @@ export default {
 
       this.restoreTask(this.task)
         .then(({ success }) => {
-          this.busy = false;
-          if (!success) this.showFlash('Restore failed', 'warning');
+          if (!success) {
+            this.showFlash('Restore failed', 'warning');
+          } else {
+            this.showFlash('Task restored', 'info');
+          }
         })
         .catch(({ message }) => {
-          this.busy = false;
           this.showFlash(message, 'warning');
+        })
+        .finally(() => {
+          this.busy = false;
         });
     },
     doDelete() {
@@ -60,12 +67,17 @@ export default {
 
       this.deleteTask(this.task)
         .then((success) => {
-          this.busy = false;
-          if (!success) this.showFlash('Delete failed', 'warning');
+          if (!success) {
+            this.showFlash('Delete failed', 'warning');
+          } else {
+            this.showFlash('Task deleted', 'info');
+          }
         })
         .catch(({ message }) => {
-          this.busy = false;
           this.showFlash(message, 'warning');
+        })
+        .finally(() => {
+          this.busy = false;
         });
     }
   }

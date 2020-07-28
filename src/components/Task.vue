@@ -4,18 +4,20 @@
     <div class="row">
       <div class="col-sm-12">
         <h5>
-          <router-link :to="taskRoute">{{ task.name }}</router-link>
+          <router-link :to="taskRoute" class="text-truncate">{{ task.name }}</router-link>
         </h5>
       </div>
       <div class="col-sm-12 text-right">
         <div class="btn-group">
-          <button class="btn btn-sm btn-outline-secondary" @click.stop.prevent="editForm()">
-            Edit
-          </button>
           <button v-if="!isPrivate" class="btn btn-sm btn-outline-secondary" @click.stop.prevent="copyToClipboard()">
             Copy link
           </button>
-          <button class="btn btn-sm btn-outline-danger" @click.stop.prevent="doArchive()">Archive</button>
+          <button class="btn btn-sm btn-outline-secondary" @click.stop.prevent="editForm()">
+            <i class="fas fa-pen"></i>
+          </button>
+          <button class="btn btn-sm btn-outline-danger" @click.stop.prevent="doArchive()">
+            <i class="fas fa-archive"></i>
+          </button>
         </div>
       </div>
     </div>
@@ -120,12 +122,17 @@ export default {
 
       this.archiveTask(this.task)
         .then(({ success }) => {
-          this.busy = false;
-          if (!success) this.showFlash('Archival failed', 'warning');
+          if (!success) {
+            this.showFlash('Failed to archive task', 'warning');
+          } else {
+            this.showFlash('Task archived', 'info');
+          }
         })
         .catch(({ message }) => {
-          this.busy = false;
           this.showFlash(message, 'warning');
+        })
+        .finally(() => {
+          this.busy = false;
         });
     }
   }
