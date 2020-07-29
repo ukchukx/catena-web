@@ -4,7 +4,7 @@
     <div class="row">
       <div class="col-sm-12">
         <h5>
-          <router-link :to="taskRoute" class="text-truncate">{{ task.name }}</router-link>
+          <router-link :to="taskRoute" class="text-truncate text-muted">{{ task.name }}</router-link>
         </h5>
       </div>
       <div class="col-sm-12 text-right">
