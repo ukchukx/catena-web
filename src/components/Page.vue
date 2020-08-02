@@ -13,16 +13,19 @@
           <div class="col-4 text-center">
             <a class="navbar-brand mx-auto" :href="dueTodosPath">
               <i :class="dueIcon"></i>
+              <br>Today
             </a>
           </div>
           <div class="col-4 text-center">
             <a class="navbar-brand mx-auto" :href="allTodosPath">
               <i :class="allIcon"></i>
+              <br>Habits
             </a>
           </div>
           <div class="col-4 text-center">
             <a class="navbar-brand mx-auto" :href="accountPath">
               <i :class="accountIcon"></i>
+              <br>Account
             </a>
           </div>
         </div>
