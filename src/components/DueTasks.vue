@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import DueTask from '@/components/DueTask';
 import Page from '@/components/Page';
 import Flash from '@/mixins/Flash';
@@ -52,9 +52,11 @@ export default {
     }
   },
   mounted() {
+    this.fetchTasks();
     setTimeout(this.updateNow, 300000);
   },
   methods: {
+    ...mapActions(['fetchTasks']),
     updateNow() {
       this.now = Date.now();
       setTimeout(this.updateNow, 300000);
