@@ -3,7 +3,7 @@
   <li class="list-group-item">
     <div class="row">
       <div class="col-md-9 col-sm-12">
-        <h5 class="text-truncate">{{ task.name }}</h5>
+        <h5 class="text-truncate lead">{{ habit.title }}</h5>
       </div>
       <div class="col-md-3 col-sm-12 text-right">
         <div class="btn-group">
@@ -24,10 +24,10 @@ import { mapActions } from 'vuex';
 import Flash from '@/mixins/Flash';
 
 export default {
-  name: 'ArchivedTask',
+  name: 'ArchivedHabit',
   mixins: [Flash],
   props: {
-    task: {
+    habit: {
       required: true,
       type: Object
     }
@@ -38,18 +38,18 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['restoreTask', 'deleteTask']),
+    ...mapActions(['restoreHabit', 'deleteHabit']),
     doRestore() {
       if (this.busy) return;
 
       this.busy = true;
 
-      this.restoreTask(this.task)
+      this.restoreHabit(this.habit)
         .then(({ success }) => {
           if (!success) {
             this.showFlash('Restore failed', 'warning');
           } else {
-            this.showFlash('Task restored', 'info');
+            this.showFlash('Habit restored', 'info');
           }
         })
         .catch(({ message }) => {
@@ -65,12 +65,12 @@ export default {
 
       this.busy = true;
 
-      this.deleteTask(this.task)
+      this.deleteHabit(this.habit)
         .then((success) => {
           if (!success) {
             this.showFlash('Delete failed', 'warning');
           } else {
-            this.showFlash('Task deleted', 'info');
+            this.showFlash('Habit deleted', 'info');
           }
         })
         .catch(({ message }) => {

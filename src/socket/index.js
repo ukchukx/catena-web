@@ -1,32 +1,38 @@
 
-const ws = window.adonis.Ws(process.env.WS_HOST, { reconnectionAttempts: 30 });
+const { Socket } = require('phoenix-channels');
 
 export default function initSocket(store) {
-  if (!store.getters.token.length) return;
+  const user = store.getters.user;
+  const token = store.getters.token;
 
-  ws.withJwtToken(store.getters.token).connect();
+  if (!token.length) return;
 
-  if (ws.getSubscription('users')) return;
+  const socket = new Socket(process.env.WS_HOST, { params: { token } });
+  socket.connect();
 
-  const usersSubscription = ws.subscribe('users');
+  const channel = socket.channel(`user:${user.id}`, {});
 
-  usersSubscription.on('task_created', ({ task }) => {
-    if (task.user_id === store.getters.user.id) store.dispatch('saveTask', task);
+  channel.on('habit_created', ({ habit }) => {
+    store.dispatch('saveHabit', habit);
   });
 
-  usersSubscription.on('task_updated', ({ task }) => {
-    if (task.user_id === store.getters.user.id) store.dispatch('saveTask', task);
+  channel.on('habit_updated', ({ habit }) => {
+    store.dispatch('saveHabit', habit);
   });
 
-  usersSubscription.on('task_deleted', ({ task }) => {
-    if (task.user_id === store.getters.user.id) store.dispatch('removeTask', task);
+  channel.on('habit_deleted', ({ habit }) => {
+    store.dispatch('removeHabit', habit);
   });
 
-  usersSubscription.on('schedule_updated', ({ schedule }) => {
-    if (schedule.user_id === store.getters.user.id) store.dispatch('saveSchedule', schedule);
-  });
+  // channel.on('user_updated', ({ user }) => {
+  //   if (user.id === store.getters.user.id) store.dispatch('saveUser', user);
+  // });
 
-  usersSubscription.on('user_updated', ({ user }) => {
-    if (user.id === store.getters.user.id) store.dispatch('saveUser', user);
-  });
+  channel.join()
+    .receive('ok', (resp) => { 
+      console.info('Joined successfully', resp);
+    })
+    .receive('error', (resp) => { 
+      console.warn('Unable to join', resp);
+    });
 }

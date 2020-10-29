@@ -21,14 +21,14 @@
       <div class="col-sm-12 mb-3" v-if="!notFound">
         <div class="card">
           <div class="card-body">
-            <TaskDetails :task="task" />
+            <HabitDetails :habit="habit" />
             <div class="row mt-4 mb-4">
               <div class="col">
                 <span class="h3">By </span>
-                <span class="text-muted task-owner h3">{{ username }}</span>
+                <span class="text-muted habit-owner">{{ username }}</span>
               </div>
             </div>
-            <Streaks :task="task" :today="today" />
+            <Streaks :habit="habit" :today="today" />
             <div class="row mt-3">
               <div class="col">
                 <v-calendar :is-expanded="true" :attributes="events"/>
@@ -51,70 +51,49 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import { habitHistory } from '@/utils/habits';
 import Streaks from './Streaks';
-import TaskDetails from './TaskDetails';
+import HabitDetails from './HabitDetails';
 
 export default {
-  name: 'PublicTaskReport',
+  name: 'PublicHabitReport',
   components: {
     Streaks,
-    TaskDetails
+    HabitDetails
   },
   data() {
     return {
       fetching: true,
       notFound: true,
       loginPath: { name: 'Signup' },
-      task: { schedules: [] },
-      taskId: this.$route.params.id
+      habit: { schedules: [] },
+      habitId: this.$route.params.id
     };
   },
   computed: {
     ...mapGetters(['user']),
     username() {
-      const { task: { user: { email, username } } } = this;
-
+      const { habit: { user: { email, username } } } = this;
       return !!username ? username : email.split('@')[0];
     },
     isLoggedIn() {
       return !!this.user.id;
     },
     today() {
-      const today = new Date();
-      today.setUTCHours(0, 0, 0, 0);
-      return today;
+      return new Date();
     },
     events() {
-      return this.task.schedules
-        .map(({ id, done, due_date }) => {
-          const date = new Date(due_date);
-          date.setUTCHours(0, 0, 0, 0);
-
-          const isToday = +this.today === +date && !done;
-          const highlight = { fillMode: 'light' };
-
-          if (done) { // done
-            highlight.color = 'green';
-          } else if (isToday) { // today
-            highlight.color = 'gray';
-          } else if (this.today <= date) { // upcoming
-            highlight.color = 'gray';
-          } else { // missed
-            highlight.color = 'red';
-          }
-
-          return isToday ? { dates: date, key: id, dot: highlight } : { dates: date, key: id, highlight };
-        });
+      return habitHistory(this.habit, this.today);
     }
   },
   created() {
     if (!!this.$route.params.id) {
-      this.fetchTask(this.$route.params.id)
+      this.fetchHabit(this.$route.params.id)
         .then(({ success, data }) => {
           if (success) {
             this.notFound = false;
             this.fetching = false;
-            this.task = data;
+            this.habit = data;
           }
         })
         .catch(() => {
@@ -123,18 +102,11 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetchTask'])
+    ...mapActions(['fetchHabit'])
   }
 };
 </script>
 <style scoped>
-.task-name {
-  font-size: 3.5rem;
-  font-weight: 500;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
 .sub-text {
   font-size: 2rem !important;
   font-weight: 400;
@@ -143,8 +115,9 @@ export default {
   font-size: 3.5rem;
   color: #999;
 }
-.task-owner {
+.habit-owner {
   color: #999;
+  font-size: 1.75rem;
 }
 .upcoming {
   background-color: #D3D3D3;
@@ -152,4 +125,3 @@ export default {
   border-width: 2px;
 }
 </style>
-

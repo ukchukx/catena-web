@@ -12,10 +12,10 @@
 
 <script>
 export default {
-  name: 'TaskListLink',
+  name: 'HabitListLink',
   data() {
     return {
-      path: { name: 'Tasks' }
+      path: { name: 'Habits' }
     };
   }
 };

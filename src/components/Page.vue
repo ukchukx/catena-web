@@ -42,8 +42,8 @@ export default {
   mixins: [Flash],
   data() {
     return {
-      dueTodosPath: this.$router.resolve({ name: 'DueTasks' }).href,
-      allTodosPath: this.$router.resolve({ name: 'Tasks' }).href,
+      dueTodosPath: this.$router.resolve({ name: 'DueHabits' }).href,
+      allTodosPath: this.$router.resolve({ name: 'Habits' }).href,
       accountPath: this.$router.resolve({ name: 'Profile' }).href
     };
   },
@@ -52,15 +52,15 @@ export default {
       return this.$route.name;
     },
     dueIcon() {
-      const common = 'fa-check-square fa-2x';
-      return this.currentRoute === 'DueTasks' ? `text-primary fas ${common}` : `far ${common}`;
+      const common = 'fa-check-square fa-1x';
+      return this.currentRoute === 'DueHabits' ? `text-primary fas ${common}` : `far ${common}`;
     },
     allIcon() {
-      const common = 'fa-list-alt fa-2x';
-      return this.currentRoute === 'Tasks' ? `text-primary fas ${common}` : `far ${common}`;
+      const common = 'fa-list-alt fa-1x';
+      return this.currentRoute === 'Habits' ? `text-primary fas ${common}` : `far ${common}`;
     },
     accountIcon() {
-      const common = 'fa-user fa-2x';
+      const common = 'fa-user fa-1x';
       return this.currentRoute === 'Profile' ? `text-primary fas ${common}` : `far ${common}`;
     }
   }

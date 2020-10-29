@@ -64,7 +64,7 @@ export default {
       },
       signupPath: { name: 'Signup' },
       forgotPath: { name: 'Forgot' },
-      profilePath: { name: 'DueTasks' },
+      profilePath: { name: 'DueHabits' },
       busy: false
     };
   },
@@ -79,7 +79,6 @@ export default {
     login() {
       if (this.busy) return;
       this.busy = true;
-
       this.authenticate(this.loginForm)
         .then((success) => {
           this.busy = false;

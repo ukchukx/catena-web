@@ -35,10 +35,12 @@
   </div>
 </template>
 <script>
+import { isTimeContainedInDate, historyDateToLocalDate } from '@/utils/dates';
+
 export default {
   name: 'Streak',
   props: {
-    task: {
+    habit: {
       required: true,
       type: Object
     },
@@ -89,12 +91,11 @@ export default {
       return !streaks.length ? 0 : Math.max(...streaks.map(streak => streak.length));
     },
     streakable() {
-      return this.task.schedules
-        .filter(({ due_date, done }) => {
-          const date = new Date(due_date);
-          date.setUTCHours(0, 0, 0, 0);
+      return this.habit.history
+        .filter(({ date, done }) => {
+          date = historyDateToLocalDate(date);
 
-          const isToday = +this.today === +date && !done;
+          const isToday = isTimeContainedInDate(date, this.today) && !done;
 
           return isToday || this.today >= date;
         });
@@ -103,7 +104,7 @@ export default {
 };
 </script>
 <style scoped>
-.task-name {
+.habit-name {
   font-size: 3.5rem;
   font-weight: 500;
   overflow: hidden;

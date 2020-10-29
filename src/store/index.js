@@ -3,13 +3,13 @@ import Vuex from 'vuex';
 import createPersistedState from 'vuex-persistedstate';
 import createMutationsSharer from 'vuex-shared-mutations';
 import initSocket from '@/socket';
-import tasks from './modules/tasks';
+import habits from './modules/habits';
 
 Vue.use(Vuex);
 const strict = process.env.NODE_ENV !== 'production';
 const store = new Vuex.Store({
   modules: {
-    tasks
+    habits
   },
   strict,
   plugins: [

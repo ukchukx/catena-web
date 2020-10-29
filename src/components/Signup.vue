@@ -60,7 +60,7 @@ export default {
         email: ''
       },
       loginPath: { name: 'Login' },
-      dueTasksPath: { name: 'DueTasks' },
+      dueHabitsPath: { name: 'DueHabits' },
       busy: false
     };
   },
@@ -75,14 +75,13 @@ export default {
     register() {
       if (this.busy) return;
       this.busy = true;
-
       this.signup(this.signupForm)
         .then((success) => {
           this.busy = false;
           if (!success) {
             this.showFlash('Could not sign up', 'error');
           } else {
-            this.$router.replace(this.dueTasksPath);
+            this.$router.replace(this.dueHabitsPath);
           }
         })
         .catch(({ message = 'Could not sign up' }) => {

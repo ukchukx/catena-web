@@ -7,12 +7,12 @@ const Signup = () => import(/* webpackChunkName: "auth" */ '@/components/Signup'
 const Forgot = () => import(/* webpackChunkName: "auth" */ '@/components/Forgot');
 const Reset = () => import(/* webpackChunkName: "auth" */ '@/components/Reset');
 const Profile = () => import('@/components/Profile');
-const DueTasks = () => import('@/components/DueTasks');
-const Tasks = () => import('@/components/Tasks');
-const CreateTask = () => import('@/components/CreateTask');
-const UpdateTask = () => import('@/components/UpdateTask');
-const TaskReport = () => import('@/components/TaskReport');
-const PublicTaskReport = () => import('@/components/PublicTaskReport');
+const DueHabits = () => import('@/components/DueHabits');
+const Habits = () => import('@/components/Habits');
+const CreateHabit = () => import('@/components/CreateHabit');
+const UpdateHabit = () => import('@/components/UpdateHabit');
+const HabitReport = () => import('@/components/HabitReport');
+const PublicHabitReport = () => import('@/components/PublicHabitReport');
 
 Vue.use(VueRouter);
 
@@ -55,9 +55,9 @@ const router = new VueRouter({
       }
     },
     {
-      path: '/app/t/:id/view',
-      name: 'PublicTaskReport',
-      component: PublicTaskReport,
+      path: '/app/habits/:id/view',
+      name: 'PublicHabitReport',
+      component: PublicHabitReport,
       meta: {
         requiresAuth: false,
         authRoute: false
@@ -72,41 +72,41 @@ const router = new VueRouter({
       }
     },
     {
-      path: '/app/tasks/today',
-      name: 'DueTasks',
-      component: DueTasks,
+      path: '/app/habits/today',
+      name: 'DueHabits',
+      component: DueHabits,
       meta: {
         requiresAuth: true
       }
     },
     {
-      path: '/app/tasks',
-      name: 'Tasks',
-      component: Tasks,
+      path: '/app/habits',
+      name: 'Habits',
+      component: Habits,
       meta: {
         requiresAuth: true
       }
     },
     {
-      path: '/app/tasks/create',
-      name: 'CreateTask',
-      component: CreateTask,
+      path: '/app/habits/create',
+      name: 'CreateHabit',
+      component: CreateHabit,
       meta: {
         requiresAuth: true
       }
     },
     {
-      path: '/app/t/:id/edit',
-      name: 'UpdateTask',
-      component: UpdateTask,
+      path: '/app/habits/:id/edit',
+      name: 'UpdateHabit',
+      component: UpdateHabit,
       meta: {
         requiresAuth: true
       }
     },
     {
-      path: '/app/t/:id',
-      name: 'TaskReport',
-      component: TaskReport,
+      path: '/app/habits/:id',
+      name: 'HabitReport',
+      component: HabitReport,
       meta: {
         requiresAuth: true
       }
@@ -130,7 +130,7 @@ router.beforeEach((to, from, next) => {
   } else if (to.matched.some(record => record.meta.authRoute)) {
     const token = store.getters.token;
     if (token.length) { // authenticated? Send user away from here
-      next({ name: 'DueTasks' });
+      next({ name: 'DueHabits' });
     } else {
       next();
     }
