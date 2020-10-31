@@ -111,7 +111,7 @@ export default {
   data() {
     const dayOptions = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const todayDay = dayOptions.find((day, index) => index === this.startDate.getDay());
-    const todayDate = Math.min(this.startDate.getDate(), 28);
+    const todayDate = this.startDate.getDate();
     const todayFullDate = dateString(this.startDate);
     const todayMonth = this.startDate.getMonth() + 1;
     const dayOptionSortOrder = dayOptions
@@ -173,7 +173,7 @@ export default {
     },
     monthDays() {
       return Array
-        .from({ length: 28 }, (_, i) => i + 1)
+        .from({ length: 31 }, (_, i) => i + 1)
         .map(value => ({ label: `Monthly on day ${value}`, value }));
     },
     endsOnSelected() {
