@@ -7,8 +7,8 @@
           <flat-pickr :config="startDateConfig" v-model="form.startDate" class="form-control" />
         </div>
         <div class="col-6">
-          <inline-input 
-            v-model="form.schedule" 
+          <inline-input
+            v-model="form.schedule"
             type="select"
             :options="scheduleOptions"
             input-classes="form-control"
@@ -16,7 +16,7 @@
         </div>
       </div>
     </b-form-group>
-              
+
     <b-form-group v-show="isCustom">
       <div class="row">
         <div class="col-4">Repeat every</div>
@@ -26,8 +26,8 @@
         <div class="col-5">
           <div class="input-group">
             <div class="input-group-append">
-              <inline-input 
-                v-model="form.which" 
+              <inline-input
+                v-model="form.which"
                 type="select"
                 :options="selectedModes"
                 input-classes="form-control"
@@ -37,7 +37,7 @@
         </div>
       </div>
     </b-form-group>
-    
+
     <b-form-group v-show="isCustomWeekly">
       <div class="row">
         <div class="col-sm-12">Repeat on</div>
@@ -46,12 +46,12 @@
         </div>
       </div>
     </b-form-group>
-    
+
     <b-form-group v-show="isCustomMonthly">
       <div class="row">
         <div class="col-sm-12">
-          <inline-input 
-            v-model="form.selectedDay" 
+          <inline-input
+            v-model="form.selectedDay"
             type="select"
             :options="monthDays"
             input-classes="form-control"
@@ -59,7 +59,7 @@
         </div>
       </div>
     </b-form-group>
-    
+
     <b-form-group class="mt-3" label="Ends" v-show="!doesNotRepeat">
       <div class="row mb-2">
         <div class="col-12">
@@ -132,28 +132,41 @@ export default {
         which: 'Day',
         end: 'never'
       },
-      scheduleOptions: [
-        { label: "Doesn't repeat", value: 'norepeat' },
-        { label: 'Repeats daily', value: 'daily' },
-        { label: `Repeats weekly on ${dayFullName(todayDay).toLowerCase()}s`, value: 'weekly' },
-        { label: `Repeats monthly on day ${todayDate}`, value: 'monthly' },
-        { label: `Repeats yearly on ${moment(todayFullDate).format('Do MMMM, YYYY')}`, value: 'yearly' },
-        { label: 'Custom', value: 'custom' }
-      ],
       endOptions: [
         { text: 'Never', value: 'never' },
         { text: 'On', value: 'on' },
         { text: 'After', value: 'after' }
       ],
-      todayDay,
-      todayDate,
-      todayFullDate,
-      todayMonth,
       dayOptions,
       dayOptionSortOrder
     };
   },
   computed: {
+    currentStartDate() {
+      return new Date(this.form.startDate);
+    },
+    todayDay() {
+      return this.dayOptions.find((day, index) => index === this.currentStartDate.getDay());
+    },
+    todayDate() {
+      return this.currentStartDate.getDate();
+    },
+    todayMonth() {
+      return this.currentStartDate.getMonth() + 1;
+    },
+    todayFullDate() {
+      return dateString(this.currentStartDate);
+    },
+    scheduleOptions() {
+      return [
+        { label: "Doesn't repeat", value: 'norepeat' },
+        { label: 'Repeats daily', value: 'daily' },
+        { label: `Repeats weekly on ${dayFullName(this.todayDay).toLowerCase()}s`, value: 'weekly' },
+        { label: `Repeats monthly on day ${this.todayDate}`, value: 'monthly' },
+        { label: `Repeats yearly on ${moment(this.todayFullDate).format('Do MMMM, YYYY')}`, value: 'yearly' },
+        { label: 'Custom', value: 'custom' }
+      ];
+    },
     selectedModes() {
       if (this.form.every === 1) {
         return [
@@ -179,7 +192,7 @@ export default {
     endsOnSelected() {
       return this.form.end === 'on';
     },
-    endsAfterSelected() {      
+    endsAfterSelected() {
       return this.form.end === 'after';
     },
     doesNotRepeat() {
