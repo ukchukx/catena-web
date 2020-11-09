@@ -49,7 +49,7 @@
 
     <b-form-group v-show="isCustomMonthly">
       <div class="row">
-        <div class="col-sm-12">
+        <div class="col-sm-12 col-md-6">
           <inline-input
             v-model.number="form.selectedDay"
             type="select"
@@ -248,7 +248,6 @@ export default {
       if (this.isMonthly || this.isCustomMonthly) {
         parts.push('FREQ=MONTHLY');
         parts.push(`INTERVAL=${this.form.every}`);
-        parts.push(`BYMONTH=${this.form.month}`);
         parts.push(`BYMONTHDAY=${this.form.selectedDay}`);
       }
 
