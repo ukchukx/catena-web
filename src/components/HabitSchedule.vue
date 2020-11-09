@@ -51,7 +51,7 @@
       <div class="row">
         <div class="col-sm-12">
           <inline-input
-            v-model="form.selectedDay"
+            v-model.number="form.selectedDay"
             type="select"
             :options="monthDays"
             input-classes="form-control"
@@ -163,7 +163,7 @@ export default {
         { label: 'Repeats daily', value: 'daily' },
         { label: `Repeats weekly on ${dayFullName(this.todayDay).toLowerCase()}s`, value: 'weekly' },
         { label: `Repeats monthly on day ${this.todayDate}`, value: 'monthly' },
-        { label: `Repeats yearly on ${moment(this.todayFullDate).format('Do MMMM, YYYY')}`, value: 'yearly' },
+        { label: `Repeats yearly on ${moment(this.todayFullDate).format('Do MMMM')}`, value: 'yearly' },
         { label: 'Custom', value: 'custom' }
       ];
     },
@@ -185,9 +185,11 @@ export default {
       ];
     },
     monthDays() {
-      return Array
+      const days = Array
         .from({ length: 31 }, (_, i) => i + 1)
         .map(value => ({ label: `Monthly on day ${value}`, value }));
+      days.push({ label: 'Monthly on the last day', value: -1 });
+      return days;
     },
     endsOnSelected() {
       return this.form.end === 'on';
@@ -264,17 +266,20 @@ export default {
     }
   },
   watch: {
-    isWeekly(val) {
-      if (val) {
-        this.form.every = 1;
-        this.form.selectedDays = [this.todayDay];
-      }
+    isWeekly(selected) {
+      if (!selected) return;
+      this.form.every = 1;
+      this.form.selectedDays = [this.todayDay];
     },
-    isMonthly(val) {
-      if (val) this.form.every = 1;
+    isMonthly(selected) {
+      if (!selected) return;
+      this.form.every = 1;
+      this.form.selectedDay = this.todayDate;
     },
-    isYearly(val) {
-      if (val) this.form.every = 1;
+    isYearly(selected) {
+      if (!selected) return;
+      this.form.every = 1;
+      this.form.selectedDay = this.todayDate;
     },
     rrule(val) {
       this.$emit('rrule-changed', val);
