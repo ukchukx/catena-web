@@ -77,7 +77,7 @@ export default {
   computed: {
     ...mapGetters(['user', 'habits']),
     showScheduleFormLabel() {
-      return this.showScheduleForm ? 'Hide schedules' : 'Modify schedules';
+      return this.showScheduleForm ? 'Hide schedule' : 'Modify schedule';
     },
     habit() {
       const { params: { id } } = this.$route;
