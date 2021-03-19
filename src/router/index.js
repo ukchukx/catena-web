@@ -72,7 +72,7 @@ const router = new VueRouter({
       }
     },
     {
-      path: '/app/habits/today',
+      path: '/app/today',
       name: 'DueHabits',
       component: DueHabits,
       meta: {
