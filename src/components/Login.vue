@@ -30,7 +30,9 @@
                   placeholder="Enter password"
                 ></b-form-input>
               </b-form-group>
-              <b-button :disabled="!formOk" type="submit" variant="primary" block>Login</b-button>
+              <b-button :disabled="!formOk" type="submit" variant="primary" block>
+                {{ busy ? 'Busy...' : 'Login' }}
+              </b-button>
             </b-form>
           </b-col>
           <b-col sm="12" class="mt-3 text-center">
