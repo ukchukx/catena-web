@@ -39,7 +39,6 @@ import Habit from '@/components/Habit';
 import ArchivedHabit from '@/components/ArchivedHabit';
 import Page from '@/components/Page';
 import Flash from '@/mixins/Flash';
-import AuthChecker from '@/mixins/AuthChecker';
 
 export default {
   name: 'Habits',
@@ -49,7 +48,7 @@ export default {
     Page,
     Habit
   },
-  mixins: [Flash, AuthChecker],
+  mixins: [Flash],
   data() {
     return {
       now: Date.now()
@@ -65,7 +64,7 @@ export default {
     }
   },
   mounted() {
-    this.fetchHabits().catch(data => this.maybeLogout(data));
+    this.fetchHabits();
   },
   methods: {
     ...mapActions(['fetchHabits']),

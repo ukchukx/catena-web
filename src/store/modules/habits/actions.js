@@ -1,8 +1,15 @@
 import axios from 'axios';
+import router from '@/router';
 import { SAVE_USER, SAVE_TOKEN, SAVE_HABITS, SAVE_HABIT, DELETE_HABIT, UPDATE_HABIT_HISTORY } from './mutation-types';
 
-const httpErrorHandler = ({ response: { status, data } }) => 
-  Promise.reject(status === 403 ? { ...data, tokenExpired: true } : data);
+const httpErrorHandler = ({ response: { status, data } }, dispatch) => {
+  if (status === 403) {
+    dispatch('deleteUser');
+    router.replace({ name: 'Login' });
+  }
+  
+  return Promise.reject(data);
+};
 
 
 export function saveHabit({ commit }, habit) {
@@ -31,7 +38,7 @@ export function fetchProfile(state) {
 
       return success;
     })
-    .catch(httpErrorHandler);
+    .catch(resp => httpErrorHandler(resp, state.dispatch));
 }
 
 export function updateProfile(state, payload) {
@@ -42,14 +49,14 @@ export function updateProfile(state, payload) {
 
       return { success, message };
     })
-    .catch(httpErrorHandler);
+    .catch(resp => httpErrorHandler(resp, state.dispatch));
 }
 
-export function changePassword(_, payload) {
+export function changePassword(state, payload) {
   return axios
     .post('/change_password', payload)
     .then(({ data: { success, message } }) => ({ success, message }))
-    .catch(httpErrorHandler);
+    .catch(resp => httpErrorHandler(resp, state.dispatch));
 }
 
 export function signup(state, payload) {
@@ -63,7 +70,7 @@ export function signup(state, payload) {
 
       return success;
     })
-    .catch(httpErrorHandler);
+    .catch(resp => httpErrorHandler(resp, state.dispatch));
 }
 
 export function authenticate(state, payload) {
@@ -76,7 +83,7 @@ export function authenticate(state, payload) {
       }
       return success;
     })
-    .catch(httpErrorHandler);
+    .catch(resp => httpErrorHandler(resp, state.dispatch));
 }
 
 export function forgotPassword(_, payload) {
@@ -96,7 +103,7 @@ export function resetPassword(state, payload) {
       }
       return success;
     })
-    .catch(httpErrorHandler);
+    .catch(resp => httpErrorHandler(resp, state.dispatch));
 }
 
 export function deleteUser({ commit }) {
@@ -114,10 +121,10 @@ export function createHabit(state, payload) {
       }
       return { success, message };
     })
-    .catch(httpErrorHandler);
+    .catch(resp => httpErrorHandler(resp, state.dispatch));
 }
 
-export function markPendingHabit({ commit }, { id }) {
+export function markPendingHabit({ commit, dispatch }, { id }) {
   return axios
     .post(`/habits/${id}/mark-pending`)
     .then(({ data: { success, data } }) => {
@@ -125,10 +132,10 @@ export function markPendingHabit({ commit }, { id }) {
       
       return success;
     })
-    .catch(httpErrorHandler);
+    .catch(resp => httpErrorHandler(resp, dispatch));
 }
 
-export function fetchHabits({ commit }) {
+export function fetchHabits({ commit, dispatch }) {
   return axios
     .get('/habits')
     .then(({ data: { success, data } }) => {
@@ -137,7 +144,7 @@ export function fetchHabits({ commit }) {
       }
       return success;
     })
-    .catch(httpErrorHandler);
+    .catch(resp => httpErrorHandler(resp, dispatch));
 }
 
 export function fetchHabit(state, habitId) {
@@ -148,7 +155,7 @@ export function fetchHabit(state, habitId) {
 
       return { success, data };
     })
-    .catch(httpErrorHandler);
+    .catch(resp => httpErrorHandler(resp, state.dispatch));
 }
 
 export function updateHabit(state, habit) {
@@ -159,7 +166,7 @@ export function updateHabit(state, habit) {
 
       return { success, message };
     })
-    .catch(httpErrorHandler);
+    .catch(resp => httpErrorHandler(resp, state.dispatch));
 }
 
 export function updateSchedule(state, { id, repeats, start_date }) {
@@ -170,7 +177,7 @@ export function updateSchedule(state, { id, repeats, start_date }) {
 
       return { success, message };
     })
-    .catch(httpErrorHandler);
+    .catch(resp => httpErrorHandler(resp, state.dispatch));
 }
 
 export function deleteHabit(state, habit) {
@@ -181,7 +188,7 @@ export function deleteHabit(state, habit) {
       removeHabit(state, id);
       return true;
     })
-    .catch(httpErrorHandler);
+    .catch(resp => httpErrorHandler(resp, state.dispatch));
 }
 
 export function archiveHabit(state, habit) {
@@ -192,7 +199,7 @@ export function archiveHabit(state, habit) {
 
       return { success, message };
     })
-    .catch(httpErrorHandler);
+    .catch(resp => httpErrorHandler(resp, state.dispatch));
 }
 
 export function restoreHabit(state, habit) {
@@ -203,5 +210,5 @@ export function restoreHabit(state, habit) {
 
       return { success, message };
     })
-    .catch(httpErrorHandler);
+    .catch(resp => httpErrorHandler(resp, state.dispatch));
 }

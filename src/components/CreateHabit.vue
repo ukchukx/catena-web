@@ -40,7 +40,6 @@ import { mapActions, mapGetters } from 'vuex';
 import flatPickr from 'vue-flatpickr-component';
 import InlineInput from 'vue-inline-input';
 import Flash from '@/mixins/Flash';
-import AuthChecker from '@/mixins/AuthChecker';
 import HabitListLink from '@/components/HabitListLink';
 import Page from '@/components/Page';
 import HabitSchedule from '@/components/HabitSchedule';
@@ -48,7 +47,7 @@ import HabitSchedule from '@/components/HabitSchedule';
 export default {
   name: 'CreateHabit',
   components: { HabitListLink, InlineInput, Page, flatPickr, HabitSchedule },
-  mixins: [Flash, AuthChecker],
+  mixins: [Flash],
   data() {
     const startDate = new Date();
     startDate.setHours(1, 0, 0);
@@ -103,8 +102,6 @@ export default {
           this.showFlash(message, 'warning');
         })
         .catch((data) => {
-          this.maybeLogout(data);
-
           this.busy = false;
           this.showFlash(data.message, 'warning');
         });
