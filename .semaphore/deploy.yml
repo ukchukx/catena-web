@@ -1,0 +1,27 @@
+version: v1.0
+name: Deploy to production
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+blocks:
+  - name: Transfer K8s YAML
+    task:
+      secrets:
+        - name: j-master-ssh-key
+      jobs:
+        - name: transfer
+          commands:
+            - cache restore k8s-$SEMAPHORE_WORKFLOW_ID
+            - chmod 0600 ~/j-master-ssh/id_rsa*
+            - scp -i ~/j-master-ssh/id_rsa -o StrictHostKeyChecking=no k8s/app.yml ubuntu@212.71.237.8:~/apps/catena/
+
+  - name: Deploy
+    task:
+      secrets:
+        - name: j-master-ssh-key
+      jobs:
+        - name: deploy
+          commands:
+            - chmod 0600 ~/j-master-ssh/id_rsa*
+            - ssh -i ~/j-master-ssh/id_rsa -o StrictHostKeyChecking=no ubuntu@212.71.237.8 'cd ~/apps/catena;/snap/bin/microk8s kubectl delete -f app.yml;/snap/bin/microk8s kubectl apply -f app.yml'

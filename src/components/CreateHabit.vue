@@ -26,7 +26,9 @@
             @start-date-changed="updateStartDate"
             @rrule-changed="updateRrule" />
 
-          <b-button :disabled="!formOk" type="submit" variant="primary">Save</b-button>
+          <b-button :disabled="!formOk" type="submit" variant="primary">
+            {{ busy ? 'Busy...' : 'Save' }}
+          </b-button>
         </b-form>
       </div>
     </div>

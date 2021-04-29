@@ -6,8 +6,8 @@
 export default {
   name: 'AuthChecker',
   methods: {
-    maybeLogout({ tokenExpired = false }) {
-      if (!tokenExpired) return;
+    maybeLogout({ message = '' }) {
+      if (message !== 'Unauthenticated') return;
 
       this.$store.dispatch('deleteUser');
       this.$router.replace({ name: 'Login' });

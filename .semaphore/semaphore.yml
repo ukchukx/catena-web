@@ -22,9 +22,9 @@ blocks:
         - name: npm install and cache
           commands:
             - checkout
-            - cache restore node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum package.json),node-modules-$SEMAPHORE_GIT_BRANCH,node-modules-master
+            - cache restore node-modules-$SEMAPHORE_GIT_BRANCH
             - npm install
-            - cache store node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum package.json) node_modules
+            - cache store node-modules-$SEMAPHORE_GIT_BRANCH node_modules
 
   - name: Tests
     task:
@@ -34,7 +34,7 @@ blocks:
       prologue:
         commands:
           - checkout
-          - cache restore node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum package.json),node-modules-$SEMAPHORE_GIT_BRANCH,node-modules-master
+          - cache restore node-modules-$SEMAPHORE_GIT_BRANCH
       jobs:
         # - name: test
         #   commands:
@@ -45,26 +45,27 @@ blocks:
 
   - name: Build
     task:
+      secrets:
+        - name: headless-commerce-pat
       env_vars:
         - name: NODE_ENV
           value: production
       prologue:
         commands:
           - checkout
-          - cache restore node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum package.json),node-modules-$SEMAPHORE_GIT_BRANCH,node-modules-master
+          - cache restore node-modules-$SEMAPHORE_GIT_BRANCH
       jobs:
-        - name: build
+        - name: build Docker image
           commands:
             - npm run build
-            - cache store dist-$SEMAPHORE_WORKFLOW_ID dist
-            - cache store run.sh-$SEMAPHORE_WORKFLOW_ID run.sh
-            - cache store stop.sh-$SEMAPHORE_WORKFLOW_ID stop.sh
-            - cache store dockerignore-$SEMAPHORE_WORKFLOW_ID .dockerignore
-            - cache store Dockerfile-$SEMAPHORE_WORKFLOW_ID Dockerfile
-            - cache store docker-compose-$SEMAPHORE_WORKFLOW_ID docker-compose.yml
+            - docker build -t catena_web .
+            - echo $HEADLESS_COMMERCE_PAT | docker login ghcr.io -u ukchukx --password-stdin
+            - docker image tag catena_web ghcr.io/headless-commerce/catena_web
+            - docker image push ghcr.io/headless-commerce/catena_web
+            - cache store k8s-$SEMAPHORE_WORKFLOW_ID k8s
 promotions:
   - name: Deploy
-    pipeline_file: production-deploy.yml
+    pipeline_file: deploy.yml
     auto_promote_on:
       - result: passed
         branch:
