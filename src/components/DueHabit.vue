@@ -5,7 +5,7 @@
       <div class="col-auto">
         <span @click.stop.prevent="mark()">
           <i v-if="busy" class="fas fa-circle-notch fa-2x fa-spin"></i>
-          <i v-else :class="checkboxClasses"></i>
+          <HabitCheckbox v-else :schedule="todaySchedule" />
         </span>
       </div>
       <div class="col">
@@ -20,11 +20,15 @@
 
 <script>
 import { mapActions } from 'vuex';
-import Flash from '@/mixins/Flash';
 import { isTimeContainedInDate } from '@/utils/dates';
+import Flash from '@/mixins/Flash';
+import HabitCheckbox from '@/components/HabitCheckbox';
 
 export default {
   name: 'DueHabit',
+  components: {
+    HabitCheckbox
+  },
   mixins: [Flash],
   props: {
     habit: {
@@ -44,9 +48,6 @@ export default {
   computed: {
     listItemClasses() {
       return this.todaySchedule.done ? 'list-group-item disabled' : 'list-group-item';
-    },
-    checkboxClasses() {
-      return this.todaySchedule.done ? 'far fa-check-square fa-2x' : 'far fa-square fa-2x';
     },
     todaySchedule() {
       const { title, history } = this.habit;
