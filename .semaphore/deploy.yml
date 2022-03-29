@@ -5,23 +5,19 @@ agent:
     type: e1-standard-2
     os_image: ubuntu1804
 blocks:
-  - name: Transfer K8s YAML
-    task:
-      secrets:
-        - name: j-master-ssh-key
-      jobs:
-        - name: transfer
-          commands:
-            - cache restore k8s-$SEMAPHORE_WORKFLOW_ID
-            - chmod 0600 ~/j-master-ssh/id_rsa*
-            - scp -i ~/j-master-ssh/id_rsa -o StrictHostKeyChecking=no k8s/app.yml ubuntu@212.71.237.8:~/apps/catena/
-
   - name: Deploy
     task:
+      env_vars:
+        - name: NAMESPACE
+          value: "catena"
       secrets:
-        - name: j-master-ssh-key
+        - name: j-cluster-k8s
       jobs:
         - name: deploy
           commands:
-            - chmod 0600 ~/j-master-ssh/id_rsa*
-            - ssh -i ~/j-master-ssh/id_rsa -o StrictHostKeyChecking=no ubuntu@212.71.237.8 'cd ~/apps/catena;/snap/bin/microk8s kubectl apply -f app.yml'
+          - cache restore k8s-$SEMAPHORE_WORKFLOW_ID
+          - chmod 0600 ~/j-cluster-kubeconfig.yaml
+          - export KUBECONFIG=~/j-cluster-kubeconfig.yaml
+          - kubectl -n $NAMESPACE apply -f k8s/deployment.yml
+          - kubectl -n $NAMESPACE apply -f k8s/ingress.yml
+          - kubectl -n $NAMESPACE rollout restart deployment catena-web

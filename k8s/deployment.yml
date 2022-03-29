@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catena-web
+  labels:
+    app: catena-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: catena-web
+  template:
+    metadata:
+      labels:
+        app: catena-web
+    spec:
+      imagePullSecrets:
+      - name: headless-commerce-package-access-token
+      containers:
+      - name: catena-web
+        image: ghcr.io/headless-commerce/catena_web
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: catena-web
+  labels:
+    app: catena-web
+spec:
+  ports:
+  - name: web
+    port: 80
+    targetPort: 80
+  selector:
+    app: catena-web
