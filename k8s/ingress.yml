@@ -11,6 +11,7 @@ metadata:
 spec:
   tls:
   - hosts:
+      - '*.catena.com.ng'
       - catena.com.ng
     secretName: catena-com-ng
   rules:
